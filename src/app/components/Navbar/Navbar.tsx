@@ -24,7 +24,9 @@ export default function Navbar() {
   return (
     <header className="bg-black flex items-center justify-between py-3 px-6 md:px-14 relative">
       <div className="logo w-[130px] md:w-[180px]">
-        <Image className="w-full h-full" src={Logo} alt="Logo" />
+        <Link href="/">
+          <Image className="w-full h-full" src={Logo} alt="Logo" />
+        </Link>
       </div>
 
       <nav className="hidden md:block">
