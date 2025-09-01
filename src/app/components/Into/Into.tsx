@@ -14,7 +14,7 @@ export default function Into() {
           <div className="flex gap-4 items-start">
             <Image src={Education} alt="education" className="w-10 h-10" />
             <div>
-              <h3 className="text-[20px] font-bold">Education</h3>
+              <h3 className="text-[20px] text-black font-bold">Education</h3>
               <p className="mt-2 text-gray-500">
                 Fermentum nisl accumsan nisi <br /> sapien in vitae
               </p>
@@ -25,7 +25,7 @@ export default function Into() {
           <div className="flex gap-4 items-start">
             <Image src={Water} alt="clean water" className="w-10 h-10" />
             <div>
-              <h3 className="text-[20px] font-bold">Clean Water</h3>
+              <h3 className="text-[20px] text-black font-bold">Clean Water</h3>
               <p className="mt-2 text-gray-500">
                 Ultricies lacus turpis proin <br /> tempor faucibus
               </p>
@@ -36,7 +36,7 @@ export default function Into() {
           <div className="flex gap-4 items-start">
             <Image src={Health} alt="health care" className="w-10 h-10" />
             <div>
-              <h3 className="text-[20px] font-bold">Health Care</h3>
+              <h3 className="text-[20px] text-black font-bold">Health Care</h3>
               <p className="mt-2 text-gray-500">
                 Adipiscing in vitae necposue eget <br /> fringilla a morbi
               </p>
@@ -47,7 +47,9 @@ export default function Into() {
           <div className="flex gap-4 items-start">
             <Image src={Community} alt="communities" className="w-10 h-10" />
             <div>
-              <h3 className="text-[20px] font-bold">Local Communities</h3>
+              <h3 className="text-[20px] text-black font-bold">
+                Local Communities
+              </h3>
               <p className="mt-2 text-gray-500">
                 Nunc tristique quis leo duis gravida <br /> volutpat vitae
               </p>

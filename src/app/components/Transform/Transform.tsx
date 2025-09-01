@@ -6,7 +6,7 @@ import TransformImg from "../../../../public/images/Img1.jpg";
 export default function Transform() {
   return (
     <>
-      <section className="h-full md:h-screen flex flex-col md:flex-row items-center justify-center py-10 px-6 md:px-14">
+      <section className="h-full md:h-screen bg-white flex flex-col md:flex-row items-center justify-center py-10 px-6 md:px-14">
         <div className="w-full md:w-[50%]">
           <div className="w-full md:max-w-[500px] aspect-square rounded-[20px] relative overflow-hidden">
             <Image
