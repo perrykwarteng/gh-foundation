@@ -34,8 +34,7 @@ export const Hero = () => {
   ];
 
   return (
-    <div className="relative w-full h-[90vh] sm:h-[80vh] md:h-[90vh] lg:h-[90vh] overflow-hidden">
-      {/* Slider */}
+    <div className="relative w-full h-[65vh] sm:h-[85vh] md:h-[90vh] lg:h-[100vh] overflow-hidden">
       <div ref={sliderRef} className="keen-slider w-full h-full">
         {slides.map((slide, index) => (
           <div
@@ -48,51 +47,46 @@ export const Hero = () => {
               fill
               className="object-cover"
               priority
-              sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
+              sizes="100vw"
               unoptimized
             />
           </div>
         ))}
       </div>
 
-      <div className="absolute inset-0 bg-black/40 sm:bg-black/50 flex flex-col justify-center px-6 sm:px-6 md:px-14">
-        <h1 className="text-white text-4xl md:text-[90px] font-bold">
+      <div className="absolute inset-0 bg-black/40 sm:bg-black/50 flex flex-col justify-center px-4 sm:px-6 md:px-14">
+        <h1 className="text-white text-3xl sm:text-5xl md:text-7xl lg:text-7xl font-bold leading-tight">
           Give Hope, <br /> Save Lives
         </h1>
-        <p className="text-gray-300 w-full md:w-[35%] mt-5">
+
+        <p className="text-gray-300 w-full md:w-1/2 lg:w-[35%] mt-5 md:mt-7 text-sm sm:text-base md:text-lg">
           Libero mauris sed sed proin. Blandit aliquet ipsum faucibus dictum
           natoque arcu. Potenti ante sed in amet massa aliquet. Enim dui urna
           mauris volutpat
         </p>
 
-        <div className="flex items-center gap-5 mt-3">
-          <div className="">
-            <div className="flex flex-col md:flex-row md:items-center md:gap-3">
-              <p className="text-[#c4a54a] text-[30px] font-semibold">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-5 mt-6">
+          <div>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
+              <p className="text-[#c4a54a] text-2xl sm:text-3xl font-semibold">
                 $1 284 528
               </p>
-              <p className="text-gray-300">Donation</p>
+              <p className="text-gray-300 text-sm sm:text-base">Donation</p>
             </div>
           </div>
-          <div className="flex flex-col md:flex-row md:items-center md:gap-3">
-            <p className="text-[#c4a54a] text-[30px] font-semibold">12 460</p>
-            <p className="text-gray-300">People Helped</p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
+            <p className="text-[#c4a54a] text-2xl sm:text-3xl font-semibold">
+              12 460
+            </p>
+            <p className="text-gray-300 text-sm sm:text-base">People Helped</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="">
-            <Image src={Spon1} alt="1" />
-          </div>
-          <div className="">
-            <Image src={Spon2} alt="2" />
-          </div>
-          <div className="">
-            <Image src={Spon1} alt="3" />
-          </div>
-          <div className="">
-            <Image src={Spon2} alt="4" />
-          </div>
+        <div className="flex flex-wrap items-center gap-3 mt-6">
+          <Image src={Spon1} alt="1" className="w-16 sm:w-20" />
+          <Image src={Spon2} alt="2" className="w-16 sm:w-20" />
+          <Image src={Spon1} alt="3" className="w-16 sm:w-20" />
+          <Image src={Spon2} alt="4" className="w-16 sm:w-20" />
         </div>
       </div>
     </div>
