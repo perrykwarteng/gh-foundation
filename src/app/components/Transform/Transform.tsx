@@ -38,13 +38,15 @@ export default function Transform() {
                   <div className="w-5 h-5 rounded-full flex items-center justify-center bg-[#c4a54a] text-white">
                     1
                   </div>
-                  <p className="font-semibold">Choose your cause</p>
+                  <p className="font-semibold text-black">Choose your cause</p>
                 </div>
                 <div className="flex items-center gap-2 mt-2">
                   <div className="w-5 h-5 rounded-full flex items-center justify-center bg-[#c4a54a] text-white">
                     2
                   </div>
-                  <p className="font-semibold">Register on our website</p>
+                  <p className="font-semibold text-black">
+                    Register on our website
+                  </p>
                 </div>
               </div>
               <div className="">
@@ -52,13 +54,17 @@ export default function Transform() {
                   <div className="w-5 h-5 rounded-full flex items-center justify-center bg-[#c4a54a] text-white">
                     3
                   </div>
-                  <p className="font-semibold">Donate the amount you like</p>
+                  <p className="font-semibold text-black">
+                    Donate the amount you like
+                  </p>
                 </div>
                 <div className="flex items-center gap-2 mt-2">
                   <div className="w-5 h-5 rounded-full flex items-center justify-center bg-[#c4a54a] text-white">
                     4
                   </div>
-                  <p className="font-semibold">Stay tuned about cause</p>
+                  <p className="font-semibold text-black">
+                    Stay tuned about cause
+                  </p>
                 </div>
               </div>
             </div>
