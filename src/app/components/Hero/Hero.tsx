@@ -34,7 +34,7 @@ export const Hero = () => {
   ];
 
   return (
-    <div className="relative w-full h-[70vh] sm:h-[80vh] md:h-[90vh] lg:h-[90vh] overflow-hidden">
+    <div className="relative w-full h-[90vh] sm:h-[80vh] md:h-[90vh] lg:h-[90vh] overflow-hidden">
       {/* Slider */}
       <div ref={sliderRef} className="keen-slider w-full h-full">
         {slides.map((slide, index) => (
