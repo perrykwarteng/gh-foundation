@@ -3,7 +3,7 @@
 import Layout from "@/app/components/Layouts/AppLayout";
 import { motion } from "framer-motion";
 
-export default function About() {
+export default function Gallery() {
   return (
     <Layout>
       <div className="flex flex-col items-center justify-center min-h-[70vh] text-center px-6">
