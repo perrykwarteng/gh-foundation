@@ -22,7 +22,7 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="bg-black flex items-center justify-between py-3 px-6 md:px-14 relative">
+    <header className="bg-[#0e372d] flex items-center justify-between py-3 px-6 md:px-14 relative">
       <div className="logo w-[130px] md:w-[180px]">
         <Link href="/">
           <Image className="w-full h-full" src={Logo} alt="Logo" />
