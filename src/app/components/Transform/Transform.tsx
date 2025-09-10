@@ -40,12 +40,11 @@ export default function Transform() {
             Transforming Good Intentions into Good Actions
           </h2>
           <p className="text-gray-500 mt-5">
-            Lorem ipsum dolor sit amet consectetur. Amet id in tristique
-            bibendum justo netus augue id. Nunc tristique quis leo duis gravida
-            volutpat vitae quam quam. Ultrices urna nec massa commodo id sit
-            diam amet et. Libero dictum ut purus ut vel sit egestas. Ut ac
-            mattis senectus ac suspendisse vitae vel nulla eleifend. Est eros
-            facilisi aenean nisl a. Vitae et fusce purus consectetur
+            Golden Height Foundation empowers children with books and learning
+            tools, supports women with vocational training, and partners with
+            schools across Ghana. Starting with three school donations yearly,
+            we aim to expand our impact and create sustainable change for
+            families and communities.
           </p>
 
           <motion.div
@@ -60,15 +59,13 @@ export default function Transform() {
                 <div className="w-6 h-6 rounded-full flex items-center justify-center bg-[#0e372d] text-white text-sm">
                   1
                 </div>
-                <p className="font-semibold text-black">Choose your cause</p>
+                <p className="font-semibold text-black">Empower Children</p>
               </div>
               <div className="flex items-center gap-2 mt-2">
                 <div className="w-6 h-6 rounded-full flex items-center justify-center bg-[#0e372d] text-white text-sm">
                   2
                 </div>
-                <p className="font-semibold text-black">
-                  Register on our website
-                </p>
+                <p className="font-semibold text-black">Support Women</p>
               </div>
             </div>
 
@@ -77,16 +74,14 @@ export default function Transform() {
                 <div className="w-6 h-6 rounded-full flex items-center justify-center bg-[#0e372d] text-white text-sm">
                   3
                 </div>
-                <p className="font-semibold text-black">
-                  Donate the amount you like
-                </p>
+                <p className="font-semibold text-black">Partner for Change</p>
               </div>
               <div className="flex items-center gap-2 mt-2">
                 <div className="w-6 h-6 rounded-full flex items-center justify-center bg-[#0e372d] text-white text-sm">
                   4
                 </div>
                 <p className="font-semibold text-black">
-                  Stay tuned about cause
+                  Create Lasting Impact
                 </p>
               </div>
             </div>

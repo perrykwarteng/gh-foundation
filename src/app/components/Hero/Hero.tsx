@@ -72,7 +72,7 @@ export const Hero = () => {
           animate="visible"
           custom={0.2}
         >
-          Give Hope, <br /> Save Lives
+          Building Dreams, <br /> Changing Lives
         </motion.h1>
 
         <motion.p
@@ -82,9 +82,9 @@ export const Hero = () => {
           animate="visible"
           custom={0.4}
         >
-          Libero mauris sed sed proin. Blandit aliquet ipsum faucibus dictum
-          natoque arcu. Potenti ante sed in amet massa aliquet. Enim dui urna
-          mauris volutpat
+          Golden Height Foundation empowers children with education and women
+          with skills, creating opportunities that uplift families and transform
+          communities for a brighter tomorrow.
         </motion.p>
 
         <motion.div
