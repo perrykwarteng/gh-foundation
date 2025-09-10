@@ -4,6 +4,7 @@ import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
 import Image from "next/image";
 import { useEffect } from "react";
+import { motion } from "framer-motion";
 
 import Spon1 from "../../../../public/icons/spon1.svg";
 import Spon2 from "../../../../public/icons/spon2.svg";
@@ -33,6 +34,15 @@ export const Hero = () => {
     { img: "/images/Slide4.jpg" },
   ];
 
+  const fadeUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: (delay: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, delay },
+    }),
+  };
+
   return (
     <div className="relative w-full h-[65vh] sm:h-[85vh] md:h-[90vh] lg:h-[100vh] overflow-hidden">
       <div ref={sliderRef} className="keen-slider w-full h-full">
@@ -55,17 +65,35 @@ export const Hero = () => {
       </div>
 
       <div className="absolute inset-0 bg-black/40 sm:bg-black/50 flex flex-col justify-center px-4 sm:px-6 md:px-14">
-        <h1 className="text-white text-3xl sm:text-5xl md:text-7xl lg:text-7xl font-bold leading-tight">
+        <motion.h1
+          className="text-white text-3xl sm:text-5xl md:text-7xl lg:text-7xl font-bold leading-tight"
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={0.2}
+        >
           Give Hope, <br /> Save Lives
-        </h1>
+        </motion.h1>
 
-        <p className="text-gray-300 w-full md:w-1/2 lg:w-[35%] mt-5 md:mt-7 text-sm sm:text-base md:text-lg">
+        <motion.p
+          className="text-gray-300 w-full md:w-1/2 lg:w-[35%] mt-5 md:mt-7 text-sm sm:text-base md:text-lg"
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={0.4}
+        >
           Libero mauris sed sed proin. Blandit aliquet ipsum faucibus dictum
           natoque arcu. Potenti ante sed in amet massa aliquet. Enim dui urna
           mauris volutpat
-        </p>
+        </motion.p>
 
-        <div className="flex flex-col sm:flex-row sm:items-center gap-5 mt-6">
+        <motion.div
+          className="flex flex-col sm:flex-row sm:items-center gap-5 mt-6"
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={0.6}
+        >
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
               <p className="text-[#c4a54a] text-2xl sm:text-3xl font-semibold">
@@ -80,14 +108,20 @@ export const Hero = () => {
             </p>
             <p className="text-gray-300 text-sm sm:text-base">People Helped</p>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="flex flex-wrap items-center gap-3 mt-6">
+        <motion.div
+          className="flex flex-wrap items-center gap-3 mt-6"
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={0.8}
+        >
           <Image src={Spon1} alt="1" className="w-16 sm:w-20" />
           <Image src={Spon2} alt="2" className="w-16 sm:w-20" />
           <Image src={Spon1} alt="3" className="w-16 sm:w-20" />
           <Image src={Spon2} alt="4" className="w-16 sm:w-20" />
-        </div>
+        </motion.div>
       </div>
     </div>
   );
