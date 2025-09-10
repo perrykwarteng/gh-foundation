@@ -18,17 +18,27 @@ export default function Footer() {
               <Image src={Logo} alt="" />
             </div>
             <p className="text-white mt-2">
-              Tincidunt luctus porta amet lectus at ultricies nec sed non.{" "}
+              Golden Height Foundation (GHF) was born out of a lifelong passion
               <br />
-              Sed sit egestas enim consectetur donec faucibus
+              for helping others a passion I carried with me from childhood.
+              <br />
+              But in June 2019, that passion transformed into a clear mission.
             </p>
             <div className="mt-2">
               <p className="text-gray-400">
-                <strong className="text-white">Phone:</strong> (610) 366-7883
+                <strong className="text-white">Momo numner:</strong>(+233) 55
+                685 3499
               </p>
               <p className="text-gray-400 mt-1">
-                <strong className="text-white">Address: </strong> 8911
-                Tanglewood Ave. <br /> Capitol Heights, MD 20743
+                <strong className="text-white">Adderess: </strong>P O Box UC
+                171, University of Cape Coast,
+                <br />
+                Cape Coast
+              </p>
+              <p className="text-gray-400 mt-1">
+                <strong className="text-white">Our Office: </strong>De Rosetta
+                Premises, Forecourt Valco Hall
+                <br /> University of Cape Coast, Cape Coast
               </p>
             </div>
           </div>
