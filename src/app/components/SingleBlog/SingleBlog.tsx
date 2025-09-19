@@ -1,4 +1,5 @@
 import Image, { StaticImageData } from "next/image";
+import Link from "next/link";
 
 import Calendar from "../../../../public/icons/calendar.svg";
 import Arrow from "../../../../public/icons/arrow-right.svg";
@@ -19,16 +20,16 @@ export default function SingleBlog({
   link = "#",
 }: SingleBlogProps) {
   return (
-    <div className="Card max-w-[416px] bg-white">
+    <div className="Card h-full max-w-[416px] rounded-[10px] bg-white shadow-sm">
       <div className="w-full max-h-[280px]">
         <Image
-          className="rounded-t-[10px] w-full h-auto"
+          className="rounded-t-[10px] w-full h-full object-cover"
           src={image}
           alt={title}
         />
       </div>
 
-      <div className="max-h-[360px] p-3.5 md:p-5 shadow-sm rounded-b-[10px]">
+      <div className="max-h-[360px] p-3.5 md:p-5">
         <div className="flex gap-1 items-center">
           <Image src={Calendar} alt="calendar icon" />
           <p className="text-gray-500 text-[13px]">{date}</p>
@@ -41,12 +42,12 @@ export default function SingleBlog({
         <p className="text-gray-500 mt-2">{description}</p>
 
         <div className="w-full mt-3.5">
-          <a
+          <Link
             href={link}
-            className="flex gap-1 items-center cursor-pointer transition-all duration-150 hover:text-[#0e372d]"
+            className="flex gap-1 items-center cursor-pointer transition-all duration-150 text-gray-600 hover:text-[#0e372d]"
           >
             Read more <Image src={Arrow} alt="arrow icon" />
-          </a>
+          </Link>
         </div>
       </div>
     </div>
