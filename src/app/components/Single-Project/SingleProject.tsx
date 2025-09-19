@@ -7,7 +7,7 @@ type ProjectCardProps = {
   raised: number;
   donations: number;
   buttonText?: string;
-  onButtonClick?: () => void;
+  onView?: () => void;
 };
 export default function SingleProject({
   image,
@@ -16,6 +16,7 @@ export default function SingleProject({
   goal,
   raised,
   donations,
+  onView,
 }: ProjectCardProps) {
   return (
     <>
@@ -32,17 +33,20 @@ export default function SingleProject({
             {title}
           </h3>
           <p className="text-gray-500 mt-2">{description}</p>
-          <div className="font-semibold flex items-center justify-between mt-2.5">
-            <p>Goal: ${goal}</p>
+          <div className="font-semibold text-[#0e372d] flex items-center justify-between mt-2.5">
+            <p>Goal: Ghs{goal}</p>
             <p>{donations}</p>
           </div>
           <div className="text-[13px] text-gray-500 flex items-center justify-between">
-            <p>Raised: ${raised}</p>
+            <p>Raised: Ghs{raised}</p>
             <p>donations</p>
           </div>
           <div className="w-full mt-3.5">
-            <button className="w-full bg-[#c4a54a] hover:bg-black text-white font-medium px-4 md:px-6 py-1 md:py-2 rounded-[10px] transition-all duration-150">
-              View Details
+            <button
+              onClick={onView}
+              className="w-full mt-3 bg-[#C4A54A] text-white px-4 py-2 rounded-lg hover:bg-black transition"
+            >
+              View Project
             </button>
           </div>
         </div>
