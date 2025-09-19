@@ -37,7 +37,7 @@ const itemVariants: Variants = {
 
 export default function Organization() {
   return (
-    <div className="h-full py-10 px-6 md:px-14">
+    <div className="h-full bg-white py-10 px-6 md:px-14">
       <motion.div
         className="flex flex-wrap justify-center md:justify-between items-center gap-6 w-full"
         variants={containerVariants}

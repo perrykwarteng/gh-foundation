@@ -53,7 +53,7 @@ export default function Testimonials() {
           <div className="max-w-[80px]">
             <Image src={QuoteImg} alt="quote image" />
           </div>
-          <h3 className="text-[28px] md:text-[34px] font-semibold mt-5 lg:mt-10 mb-3 leading-snug">
+          <h3 className="text-[28px] text-[#0e372d] md:text-[34px] font-semibold mt-5 lg:mt-10 mb-3 leading-snug">
             Together, we can change lives for the better
           </h3>
 
@@ -62,7 +62,7 @@ export default function Testimonials() {
               <div key={i} className="keen-slider__slide">
                 <p className="text-gray-700 md:mt-3 lg:mt-8">{t.message}</p>
                 <div className="pt-4 lg:pt-7">
-                  <p className="font-bold">{t.name}</p>
+                  <p className="font-bold text-[#c4a54a]">{t.name}</p>
                   <p className="text-sm text-gray-500">{t.role}</p>
                 </div>
               </div>

@@ -32,7 +32,7 @@ export default function Regions() {
   };
 
   return (
-    <div className="h-full py-10 px-6 md:px-14">
+    <div className="h-full bg-white py-10 px-6 md:px-14">
       <motion.div
         className="flex flex-col items-center justify-center text-center"
         variants={containerVariants}
@@ -42,14 +42,14 @@ export default function Regions() {
       >
         <motion.h3
           variants={itemVariants}
-          className="text-[23px] md:text-[33px] text-black font-semibold"
+          className="text-[23px] md:text-[33px] text-[#0e372d] font-semibold"
         >
           Projects by Region
         </motion.h3>
 
         <motion.p
           variants={itemVariants}
-          className="w-full md:w-[85%] text-black mt-3 leading-relaxed"
+          className="w-full md:w-[85%] text-[#0e372d] mt-3 leading-relaxed"
         >
           Adipiscing in vitae nec posuere eget fringilla a morbi. Ultricies
           lacus turpis proin tempor faucibus ullamcorper massa tristique est.

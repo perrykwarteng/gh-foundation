@@ -40,7 +40,7 @@ export default function Into() {
           >
             <Image src={Education} alt="education" className="w-10 h-10" />
             <div>
-              <h3 className="text-[20px] text-black font-bold">
+              <h3 className="text-[20px] text-[#0e372d] font-bold">
                 Educational Support
               </h3>
               <p className="mt-2 text-gray-500">
@@ -56,7 +56,7 @@ export default function Into() {
           >
             <Image src={Sustainable} alt="clean water" className="w-10 h-10" />
             <div>
-              <h3 className="text-[20px] text-black font-bold">
+              <h3 className="text-[20px] text-[#0e372d] font-bold">
                 Sustainable Impact
               </h3>
               <p className="mt-2 text-gray-500">
@@ -72,7 +72,7 @@ export default function Into() {
           >
             <Image src={Training} alt="health care" className="w-10 h-10" />
             <div>
-              <h3 className="text-[20px] text-black font-bold">
+              <h3 className="text-[20px] text-[#0e372d] font-bold">
                 Vocational Training
               </h3>
               <p className="mt-2 text-gray-500">
@@ -88,7 +88,7 @@ export default function Into() {
           >
             <Image src={Community} alt="communities" className="w-10 h-10" />
             <div>
-              <h3 className="text-[20px] text-black font-bold">
+              <h3 className="text-[20px] text-[#0e372d] font-bold">
                 School Partnerships
               </h3>
               <p className="mt-2 text-gray-500">
