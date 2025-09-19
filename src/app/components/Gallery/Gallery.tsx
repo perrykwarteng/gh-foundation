@@ -44,8 +44,8 @@ const itemVariants: Variants = {
 
 export default function Gallery() {
   return (
-    <section className="py-10 px-6 md:px-14">
-      <h2 className="text-[23px] text-center text-black md:text-[33px] font-semibold">
+    <section className="py-10 px-6 md:px-14 bg-white">
+      <h2 className="text-[23px] text-center text-[#0e372d] md:text-[33px] font-semibold">
         Our Gallery
       </h2>
 
