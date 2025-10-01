@@ -32,7 +32,7 @@ export default function Regions() {
   };
 
   return (
-    <div className="h-full bg-white py-10 px-6 md:px-14">
+    <div className="bg-white py-10 px-6 md:px-14">
       <motion.div
         className="flex flex-col items-center justify-center text-center"
         variants={containerVariants}

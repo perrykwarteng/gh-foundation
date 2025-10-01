@@ -7,9 +7,6 @@ import SingleProject from "../Single-Project/SingleProject";
 import Project1 from "../../../../public/icons/projectImg.svg";
 import Project2 from "../../../../public/icons/projectImg2.svg";
 import Project3 from "../../../../public/icons/projectImg3.svg";
-import Project4 from "../../../../public/icons/projectImg4.svg";
-import Project5 from "../../../../public/icons/projectImg5.svg";
-import Project6 from "../../../../public/icons/projectImg6.svg";
 
 type Project = {
   id: number;
@@ -52,70 +49,33 @@ export const projectsData: Project[] = [
     raised: 12000,
     donations: 22,
   },
-  {
-    id: 4,
-    image: Project4,
-    title: "Feeding the Hungry",
-    description:
-      "Daily meals for street children and vulnerable families in urban communities.",
-    goal: 10000,
-    raised: 7500,
-    donations: 18,
-  },
-  {
-    id: 5,
-    image: Project5,
-    title: "Shelter & Housing",
-    description:
-      "Constructing affordable housing for families displaced by floods and disasters.",
-    goal: 25000,
-    raised: 14000,
-    donations: 12,
-  },
-  {
-    id: 6,
-    image: Project6,
-    title: "Women Empowerment",
-    description:
-      "Training women in vocational skills and entrepreneurship for sustainable income.",
-    goal: 18000,
-    raised: 9000,
-    donations: 15,
-  },
 ];
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.2 },
+    transition: { staggerChildren: 0.2, when: "beforeChildren" },
   },
 };
 
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: 50 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
 };
 
 export default function Projects() {
   return (
-    <div className="py-10 px-6 md:px-14 bg-white h-full">
-      <div className="flex items-center justify-between">
+    <div className="py-10 px-6 md:px-14 bg-white">
+      <div className="flex items-center justify-between mb-8">
         <h3 className="text-[25px] text-[#0e372d] font-semibold">Projects</h3>
-        <div>
-          <button className="border-2 text-[#0e372d] font-medium border-[#0e372d] hover:bg-[#0e372d] hover:text-white px-4 md:px-6 py-1 md:py-2 rounded-[10px] transition duration-200">
-            More Projects
-          </button>
-        </div>
+        <button className="border-2 text-[#0e372d] font-medium border-[#0e372d] hover:bg-[#0e372d] hover:text-white px-4 md:px-6 py-1 md:py-2 rounded-[10px] transition duration-300 ease-in-out">
+          More Projects
+        </button>
       </div>
 
       <motion.div
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:grid-rows-3 lg:grid-rows-2 
-             gap-y-5 md:gap-5 lg:gap-10 place-items-center md:place-items-stretch mt-7"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 place-items-center md:place-items-stretch"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Logo from "../../../../public/icons/GHF-LOGO.png";
-import Project from "../../../../public/icons/Igms.svg";
 import Facebook from "../../../../public/icons/Facebook.svg";
 import X from "../../../../public/icons/X.svg";
 import Instagram from "../../../../public/icons/Instagram.svg";

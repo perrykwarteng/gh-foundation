@@ -6,9 +6,6 @@ import Image from "next/image";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 
-import Spon1 from "../../../../public/icons/spon1.svg";
-import Spon2 from "../../../../public/icons/spon2.svg";
-
 export const Hero = () => {
   const [sliderRef, instanceRef] = useKeenSlider({
     loop: true,
@@ -76,7 +73,7 @@ export const Hero = () => {
         </motion.h1>
 
         <motion.p
-          className="text-gray-300 w-full md:w-1/2 lg:w-[35%] mt-5 md:mt-7 text-sm sm:text-base md:text-lg"
+          className="text-gray-300 w-full md:w-1/2 lg:w-[45%] mt-5 md:mt-7 text-sm sm:text-base md:text-lg"
           variants={fadeUp}
           initial="hidden"
           animate="visible"
