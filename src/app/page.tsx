@@ -18,11 +18,8 @@ export default function Home() {
       <Into />
       <Projects />
       <Regions />
-      <Gallery />
       <Stats />
       <Testimonials />
-      <Blog />
-      <Organization />
     </Layout>
   );
 }

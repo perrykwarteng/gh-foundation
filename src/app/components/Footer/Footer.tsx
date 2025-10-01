@@ -78,12 +78,12 @@ export default function Footer() {
               </Link>
             </ul>
           </div>
-          <div className="">
+          {/* <div className="">
             <h3 className="text-white text-[25px] font-semibold">Projects</h3>
             <div className="mt-2.5">
               <Image src={Project} alt="Projects" />
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between mt-10">
           <div className="flex items-center gap-4">

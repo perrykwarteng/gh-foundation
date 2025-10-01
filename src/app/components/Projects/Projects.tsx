@@ -105,9 +105,7 @@ export default function Projects() {
   return (
     <div className="py-10 px-6 md:px-14 bg-white h-full">
       <div className="flex items-center justify-between">
-        <h3 className="text-[25px] text-[#0e372d] font-semibold">
-          Latest Causes
-        </h3>
+        <h3 className="text-[25px] text-[#0e372d] font-semibold">Projects</h3>
         <div>
           <button className="border-2 text-[#0e372d] font-medium border-[#0e372d] hover:bg-[#0e372d] hover:text-white px-4 md:px-6 py-1 md:py-2 rounded-[10px] transition duration-200">
             More Projects

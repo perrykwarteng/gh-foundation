@@ -66,13 +66,13 @@ export const Hero = () => {
 
       <div className="absolute inset-0 bg-black/40 sm:bg-black/50 flex flex-col justify-center px-4 sm:px-6 md:px-14">
         <motion.h1
-          className="text-white text-3xl sm:text-5xl md:text-7xl lg:text-7xl font-bold leading-tight"
+          className="text-white text-3xl sm:text-5xl md:text-7xl lg:text-5xl font-bold leading-tight"
           variants={fadeUp}
           initial="hidden"
           animate="visible"
           custom={0.2}
         >
-          Building Dreams, <br /> Changing Lives
+          Unlocking Potential, <br /> Transforming Communities
         </motion.h1>
 
         <motion.p
@@ -82,9 +82,14 @@ export const Hero = () => {
           animate="visible"
           custom={0.4}
         >
-          Golden Height Foundation empowers children with education and women
-          with skills, creating opportunities that uplift families and transform
-          communities for a brighter tomorrow.
+          At Golden Height Foundation, we believe that every individual has
+          untapped potential waiting to be unlocked. Through education,
+          empowerment, and collaboration, we provide the tools and support
+          needed to transform lives. When individuals grow and succeed, entire
+          communities thrive. Our mission is simple: by empowering one person at
+          a time, we create lasting, meaningful change that ripples through
+          generations. Together, we are shaping a brighter, more inclusive
+          future for all,
         </motion.p>
 
         <motion.div
@@ -94,7 +99,7 @@ export const Hero = () => {
           animate="visible"
           custom={0.6}
         >
-          <div>
+          {/* <div>
             <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
               <p className="text-[#c4a54a] text-2xl sm:text-3xl font-semibold">
                 $1 284 528
@@ -107,7 +112,7 @@ export const Hero = () => {
               12 460
             </p>
             <p className="text-gray-300 text-sm sm:text-base">People Helped</p>
-          </div>
+          </div> */}
         </motion.div>
 
         <motion.div
@@ -117,10 +122,10 @@ export const Hero = () => {
           animate="visible"
           custom={0.8}
         >
-          <Image src={Spon1} alt="1" className="w-16 sm:w-20" />
+          {/* <Image src={Spon1} alt="1" className="w-16 sm:w-20" />
           <Image src={Spon2} alt="2" className="w-16 sm:w-20" />
           <Image src={Spon1} alt="3" className="w-16 sm:w-20" />
-          <Image src={Spon2} alt="4" className="w-16 sm:w-20" />
+          <Image src={Spon2} alt="4" className="w-16 sm:w-20" /> */}
         </motion.div>
       </div>
     </div>
