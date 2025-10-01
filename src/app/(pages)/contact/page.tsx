@@ -69,7 +69,7 @@ export default function Contact() {
               <div className="flex items-center gap-x-3">
                 <Image src={MailImg} alt="mail icon" />
                 <p className="text-white text-sm md:text-base">
-                  info@goldenheight.org
+                  info@goldenheightfoundation.org
                 </p>
               </div>
               <div className="flex items-center gap-x-3">

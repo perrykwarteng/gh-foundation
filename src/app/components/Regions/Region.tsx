@@ -51,11 +51,10 @@ export default function Regions() {
           variants={itemVariants}
           className="w-full md:w-[85%] text-[#0e372d] mt-3 leading-relaxed"
         >
-          Adipiscing in vitae nec posuere eget fringilla a morbi. Ultricies
-          lacus turpis proin tempor faucibus ullamcorper massa tristique est.
-          Non quam arcu lectus dictum at dictum vitae. In leo fusce ac nec sem
-          mattis semper faucibus varius. At magna faucibus ornare adipiscing. Ac
-          nec nisl at id integer nulla dui facilisis adipiscing.
+          We are currently operating in four regions across Ghana, focusing on
+          impactful projects that identigy and unlock potentials. Our dedicated
+          teams work closely with local communities to identify needs and
+          implement sustainable solutions.
         </motion.p>
 
         <motion.div
@@ -65,8 +64,9 @@ export default function Regions() {
           {[
             "Greater Accra Region",
             "Ashanti Region",
-            "Northern Region",
+            "Western Region",
             "Eastern Region",
+            "Central Region",
           ].map((region, i) => (
             <motion.p
               key={i}
