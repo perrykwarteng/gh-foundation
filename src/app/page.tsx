@@ -6,9 +6,7 @@ import Regions from "./components/Regions/Region";
 import Stats from "./components/Stats/Stats";
 import Testimonials from "./components/Testimonials/Testimonial";
 import Transform from "./components/Transform/Transform";
-import Blog from "./components/Blog/Blog";
-import Gallery from "./components/Gallery/Gallery";
-import Organization from "./components/Organization/Organization";
+
 
 export default function Home() {
   return (

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import TestimonialImg from "../../../../public/images/Testimonials.svg";
+import TestimonialImg from "../../../../public/images/T1.jpg";
 import QuoteImg from "../../../../public/icons/Quote.svg";
 import { useEffect, useState } from "react";
 import { useKeenSlider } from "keen-slider/react";
@@ -92,7 +92,7 @@ export default function Testimonials() {
           <Image
             src={TestimonialImg}
             alt="Testimonial Image"
-            className="w-full h-auto"
+            className="w-full h-auto rounded-[15px]"
           />
         </motion.div>
       </div>

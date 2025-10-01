@@ -2,10 +2,10 @@
 
 import React, { useMemo, useState } from "react";
 import {
-  Mail,
-  Linkedin,
-  Twitter,
-  Github,
+  // Mail,
+  // Linkedin,
+  // Twitter,
+  // Github,
   Search,
   ChevronDown,
 } from "lucide-react";
@@ -14,6 +14,12 @@ import HeroText from "@/app/components/Hero-text/Hero-text";
 import Blog from "@/app/components/Blog/Blog";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
+
+import GabrielImg from "../../../../public/images/team/Gabriel.jpeg";
+import MavisImg from "../../../../public/images/team/Mavis.jpeg";
+import RosettaImg from "../../../../public/images/team/Rosetta.jpeg";
+import PrinceImg from "../../../../public/images/team/Prince.jpeg";
 
 export default function Team() {
   const [q, setQ] = useState("");
@@ -31,98 +37,110 @@ export default function Team() {
       // ------- FOUNDERS -------
       {
         id: "p1",
-        name: "Ama Mensah",
-        title: "Co-Founder & CEO",
+        name: "Dr (Mrs) Mavis Opoku Boadu",
+        title: "Founder/Executive Director",
         group: "Founders",
-        email: "ama@org.org",
+        email: "",
         socials: { linkedin: "#", twitter: "#" },
+        image: MavisImg,
       },
-      {
-        id: "p2",
-        name: "Kwesi Boateng",
-        title: "Co-Founder & COO",
-        group: "Founders",
-        email: "kwesi@org.org",
-        socials: { linkedin: "#", twitter: "#" },
-      },
-
       // ------- LEADERSHIP -------
       {
-        id: "p3",
-        name: "Naana Adjei",
-        title: "Director of Programs",
+        id: "p2",
+        name: "Dr Prince Akowuah Aning",
+        title: "Strategy Advisor",
         group: "Leadership",
-        email: "naana@org.org",
+        email: "",
         socials: { linkedin: "#" },
+        image: PrinceImg,
       },
       {
-        id: "p4",
-        name: "Kofi Owusu",
-        title: "Director of Operations",
+        id: "p3",
+        name: "Mrs Rosetta Marfowaa Asare",
+        title: "Doner & Partnerships Manager",
         group: "Leadership",
-        email: "kofi@org.org",
+        email: "",
         socials: { linkedin: "#" },
+        image: RosettaImg,
       },
-
-      // ------- TEAM -------
       {
         id: "p5",
-        name: "Akosua Dankwa",
-        title: "Program Manager",
-        group: "Team",
-        email: "akosua@org.org",
-        socials: { linkedin: "#", github: "#" },
+        name: "Mr Matthew Amissah",
+        title: "Treasurer",
+        group: "Leadership",
+        email: "",
+        socials: { linkedin: "#" },
+        image: "",
       },
       {
         id: "p6",
-        name: "Yaw Asare",
-        title: "Community Coordinator",
-        group: "Team",
-        email: "yaw@org.org",
+        name: "Mr Gabriel",
+        title: "",
+        group: "Leadership",
+        email: "",
         socials: { linkedin: "#" },
-      },
-      {
-        id: "p7",
-        name: "Efua Sarpong",
-        title: "Finance & Admin",
-        group: "Team",
-        email: "efua@org.org",
-        socials: { linkedin: "#" },
+        image: GabrielImg,
       },
 
+      // ------- TEAM -------
+      // {
+      //   id: "p5",
+      //   name: "Akosua Dankwa",
+      //   title: "Program Manager",
+      //   group: "Team",
+      //   email: "akosua@org.org",
+      //   socials: { linkedin: "#", github: "#" },
+      // },
+      // {
+      //   id: "p6",
+      //   name: "Yaw Asare",
+      //   title: "Community Coordinator",
+      //   group: "Team",
+      //   email: "yaw@org.org",
+      //   socials: { linkedin: "#" },
+      // },
+      // {
+      //   id: "p7",
+      //   name: "Efua Sarpong",
+      //   title: "Finance & Admin",
+      //   group: "Team",
+      //   email: "efua@org.org",
+      //   socials: { linkedin: "#" },
+      // },
+
       // ------- VOLUNTEERS -------
-      {
-        id: "p8",
-        name: "Kojo Amankwah",
-        title: "Volunteer",
-        group: "Volunteers",
-        email: "kojo@org.org",
-        socials: { linkedin: "#" },
-      },
-      {
-        id: "p9",
-        name: "Abena Owusu",
-        title: "Volunteer",
-        group: "Volunteers",
-        email: "abena@org.org",
-        socials: { linkedin: "#" },
-      },
-      {
-        id: "p10",
-        name: "Mensah Adom",
-        title: "Volunteer",
-        group: "Volunteers",
-        email: "mensah@org.org",
-        socials: { linkedin: "#" },
-      },
-      {
-        id: "p11",
-        name: "Selina Tetteh",
-        title: "Volunteer",
-        group: "Volunteers",
-        email: "selina@org.org",
-        socials: { linkedin: "#" },
-      },
+      // {
+      //   id: "p8",
+      //   name: "Kojo Amankwah",
+      //   title: "Volunteer",
+      //   group: "Volunteers",
+      //   email: "kojo@org.org",
+      //   socials: { linkedin: "#" },
+      // },
+      // {
+      //   id: "p9",
+      //   name: "Abena Owusu",
+      //   title: "Volunteer",
+      //   group: "Volunteers",
+      //   email: "abena@org.org",
+      //   socials: { linkedin: "#" },
+      // },
+      // {
+      //   id: "p10",
+      //   name: "Mensah Adom",
+      //   title: "Volunteer",
+      //   group: "Volunteers",
+      //   email: "mensah@org.org",
+      //   socials: { linkedin: "#" },
+      // },
+      // {
+      //   id: "p11",
+      //   name: "Selina Tetteh",
+      //   title: "Volunteer",
+      //   group: "Volunteers",
+      //   email: "selina@org.org",
+      //   socials: { linkedin: "#" },
+      // },
     ],
     []
   );
@@ -265,7 +283,15 @@ function Card({ person, subtle }: { person: Person; subtle?: boolean }) {
       className="group rounded-2xl border border-neutral-200 bg-white p-6 shadow-[0_6px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)] transition"
     >
       <div className="flex items-center gap-4">
-        <Avatar name={person.name} />
+        {person.image ? (
+          <Image
+            src={person.image}
+            alt={person.name}
+            className="w-[48px] h-[48px] rounded-full object-cover"
+          />
+        ) : (
+          <Avatar name={person.name} />
+        )}
         <div>
           <h3 className="text-lg font-semibold tracking-tight">
             {person.name}
@@ -279,35 +305,6 @@ function Card({ person, subtle }: { person: Person; subtle?: boolean }) {
           </p>
           <p className="mt-0.5 text-xs text-neutral-400">{person.group}</p>
         </div>
-      </div>
-
-      <div className="mt-5 flex items-center gap-3">
-        {person.email && (
-          <Link
-            href={`mailto:${person.email}`}
-            className="inline-flex items-center gap-2 text-sm text-neutral-700 hover:text-black"
-          >
-            <Mail className="h-4 w-4" /> Email
-          </Link>
-        )}
-      </div>
-
-      <div className="mt-4 flex items-center gap-3">
-        {person.socials?.linkedin && (
-          <IconButton href={person.socials.linkedin} label="LinkedIn">
-            <Linkedin className="h-4 w-4" />
-          </IconButton>
-        )}
-        {person.socials?.twitter && (
-          <IconButton href={person.socials.twitter} label="Twitter">
-            <Twitter className="h-4 w-4" />
-          </IconButton>
-        )}
-        {person.socials?.github && (
-          <IconButton href={person.socials.github} label="GitHub">
-            <Github className="h-4 w-4" />
-          </IconButton>
-        )}
       </div>
     </motion.div>
   );
@@ -348,6 +345,7 @@ function IconButton({
 }
 
 export type Person = {
+  image: any;
   id: string;
   name: string;
   title: string;

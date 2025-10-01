@@ -1,9 +1,9 @@
 import Image from "next/image";
 
-import SideImg from "../../../../public/icons/AboutSideImg.svg";
+import SideImg from "../../../../public/images/Ab2.jpg";
+import SideImg2 from "../../../../public/images/Ab1.jpg";
 import MissionImg from "../../../../public/icons/mission.svg";
 import VisionImg from "../../../../public/icons/vission.svg";
-import ValuesImg from "../../../../public/icons/values.svg";
 
 export default function AboutOrganization() {
   return (
@@ -21,9 +21,12 @@ export default function AboutOrganization() {
               </p>
             </div>
             <p className="mt-2 text-gray-500">
-              Amet id in tristique bibendum justo netus augue id. Nunc tristique
-              quis leo duis gravida volutpat vitae quam quam. Ultrices urna nec
-              massa commodo
+              Golden Height Foundation, based in Cape Coast, Ghana, mobilizes
+              resources from individuals, faith groups, governmental bodies,
+              NGOs, and civil society both locally and internationally, to
+              transform lives in rural communities. Inspired by Frederick
+              Douglass&apos; words: “It is easier to build strong children than
+              to repair broken men.”
             </p>
           </div>
 
@@ -35,32 +38,24 @@ export default function AboutOrganization() {
               </p>
             </div>
             <p className="mt-2 text-gray-500">
-              Amet id in tristique bibendum justo netus augue id. Nunc tristique
-              quis leo duis gravida volutpat vitae quam quam. Ultrices urna nec
-              massa commodo
-            </p>
-          </div>
-
-          <div className="mt-4">
-            <div className="flex items-center gap-2">
-              <Image src={ValuesImg} alt="Mission Image" />
-              <p className="text-[22px] text-gray-800 font-semibold">
-                Our Values
-              </p>
-            </div>
-            <p className="mt-2 text-gray-500">
-              Amet id in tristique bibendum justo netus augue id. Nunc tristique
-              quis leo duis gravida volutpat vitae quam quam. Ultrices urna nec
-              massa commodo
+              We envision a world where every child has access to quality
+              education and every woman is empowered to become self-reliant,
+              confident, and capable of shaping a brighter future. We believe
+              every person carries a gem within, and with the right support,
+              they can rise to golden heights.
             </p>
           </div>
         </div>
         <div className="w-full md:w-[50%] flex gap-5">
           <div className="max-w-[318px] max-h-[560px]">
-            <Image className="w-full h-full" src={SideImg} alt="side" />
+            <Image
+              className="w-full h-full rounded-[15px]"
+              src={SideImg}
+              alt="side"
+            />
           </div>
           <div className="">
-            <Image className="w-full h-full" src={SideImg} alt="side" />
+            <Image className="w-full h-full rounded-[15px]" src={SideImg2} alt="side" />
           </div>
         </div>
       </div>
