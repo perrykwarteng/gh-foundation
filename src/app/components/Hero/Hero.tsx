@@ -6,9 +6,6 @@ import Image from "next/image";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 
-import Spon1 from "../../../../public/icons/spon1.svg";
-import Spon2 from "../../../../public/icons/spon2.svg";
-
 export const Hero = () => {
   const [sliderRef, instanceRef] = useKeenSlider({
     loop: true,

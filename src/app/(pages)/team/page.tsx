@@ -1,38 +1,39 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import {
-  // Mail,
-  // Linkedin,
-  // Twitter,
-  // Github,
-  Search,
-  ChevronDown,
-} from "lucide-react";
+import { Search, ChevronDown } from "lucide-react";
 import Layout from "@/app/components/Layouts/AppLayout";
 import HeroText from "@/app/components/Hero-text/Hero-text";
 import Blog from "@/app/components/Blog/Blog";
 import { motion } from "framer-motion";
-import Link from "next/link";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 
 import GabrielImg from "../../../../public/images/team/Gabriel.jpeg";
 import MavisImg from "../../../../public/images/team/Mavis.jpeg";
 import RosettaImg from "../../../../public/images/team/Rosetta.jpeg";
 import PrinceImg from "../../../../public/images/team/Prince.jpeg";
 
+export type Person = {
+  image?: StaticImageData | null;
+  id: string;
+  name: string;
+  title: string;
+  group: "Founders" | "Leadership" | "Team" | "Volunteers" | string;
+  email?: string;
+  socials?: {
+    linkedin?: string;
+    twitter?: string;
+    github?: string;
+  };
+};
+
 export default function Team() {
   const [q, setQ] = useState("");
-  const [role, setRole] = useState("All");
-  const roles = [
-    "All",
-    "Founders",
-    "Leadership",
-    "Team",
-    "Volunteers",
-  ] as const;
+  const [role, setRole] = useState<TeamGroup | "All">("All");
 
-  const people = useMemo(
+  const roles: TeamGroup[] = ["Founders", "Leadership", "Team", "Volunteers"];
+
+  const people: Person[] = useMemo(
     () => [
       // ------- FOUNDERS -------
       {
@@ -40,9 +41,8 @@ export default function Team() {
         name: "Dr (Mrs) Mavis Opoku Boadu",
         title: "Founder/Executive Director",
         group: "Founders",
-        email: "",
-        socials: { linkedin: "#", twitter: "#" },
         image: MavisImg,
+        socials: { linkedin: "#", twitter: "#" },
       },
       // ------- LEADERSHIP -------
       {
@@ -50,97 +50,31 @@ export default function Team() {
         name: "Dr Prince Akowuah Aning",
         title: "Strategy Advisor",
         group: "Leadership",
-        email: "",
-        socials: { linkedin: "#" },
         image: PrinceImg,
+        socials: { linkedin: "#" },
       },
       {
         id: "p3",
         name: "Mrs Rosetta Marfowaa Asare",
         title: "Doner & Partnerships Manager",
         group: "Leadership",
-        email: "",
-        socials: { linkedin: "#" },
         image: RosettaImg,
+        socials: { linkedin: "#" },
       },
       {
         id: "p5",
         name: "Mr Matthew Amissah",
         title: "Treasurer",
         group: "Leadership",
-        email: "",
-        socials: { linkedin: "#" },
-        image: "",
       },
       {
         id: "p6",
         name: "Mr Gabriel",
         title: "",
         group: "Leadership",
-        email: "",
-        socials: { linkedin: "#" },
         image: GabrielImg,
+        socials: { linkedin: "#" },
       },
-
-      // ------- TEAM -------
-      // {
-      //   id: "p5",
-      //   name: "Akosua Dankwa",
-      //   title: "Program Manager",
-      //   group: "Team",
-      //   email: "akosua@org.org",
-      //   socials: { linkedin: "#", github: "#" },
-      // },
-      // {
-      //   id: "p6",
-      //   name: "Yaw Asare",
-      //   title: "Community Coordinator",
-      //   group: "Team",
-      //   email: "yaw@org.org",
-      //   socials: { linkedin: "#" },
-      // },
-      // {
-      //   id: "p7",
-      //   name: "Efua Sarpong",
-      //   title: "Finance & Admin",
-      //   group: "Team",
-      //   email: "efua@org.org",
-      //   socials: { linkedin: "#" },
-      // },
-
-      // ------- VOLUNTEERS -------
-      // {
-      //   id: "p8",
-      //   name: "Kojo Amankwah",
-      //   title: "Volunteer",
-      //   group: "Volunteers",
-      //   email: "kojo@org.org",
-      //   socials: { linkedin: "#" },
-      // },
-      // {
-      //   id: "p9",
-      //   name: "Abena Owusu",
-      //   title: "Volunteer",
-      //   group: "Volunteers",
-      //   email: "abena@org.org",
-      //   socials: { linkedin: "#" },
-      // },
-      // {
-      //   id: "p10",
-      //   name: "Mensah Adom",
-      //   title: "Volunteer",
-      //   group: "Volunteers",
-      //   email: "mensah@org.org",
-      //   socials: { linkedin: "#" },
-      // },
-      // {
-      //   id: "p11",
-      //   name: "Selina Tetteh",
-      //   title: "Volunteer",
-      //   group: "Volunteers",
-      //   email: "selina@org.org",
-      //   socials: { linkedin: "#" },
-      // },
     ],
     []
   );
@@ -174,6 +108,7 @@ export default function Team() {
             transition={{ duration: 0.6 }}
             className="flex flex-col sm:flex-row items-stretch justify-end sm:items-center gap-3"
           >
+            {/* Search */}
             <div className="flex items-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 h-12 w-full sm:w-[360px]">
               <Search className="h-5 w-5 text-neutral-500" />
               <input
@@ -184,12 +119,14 @@ export default function Team() {
               />
             </div>
 
+            {/* Role select */}
             <div className="relative">
               <select
                 value={role}
-                onChange={(e) => setRole(e.target.value)}
+                onChange={(e) => setRole(e.target.value as TeamGroup | "All")}
                 className="appearance-none pr-10 pl-4 h-12 rounded-xl border border-neutral-200 bg-white text-sm font-medium"
               >
+                <option value="All">All</option>
                 {roles.map((r) => (
                   <option key={r} value={r}>
                     {r}
@@ -200,6 +137,7 @@ export default function Team() {
             </div>
           </motion.div>
 
+          {/* Team sections */}
           <TeamSection
             title="Founders"
             people={filtered.filter((p) => p.group === "Founders")}
@@ -225,6 +163,7 @@ export default function Team() {
   );
 }
 
+// ---------------- Team Section ----------------
 function TeamSection({
   title,
   people,
@@ -254,11 +193,7 @@ function TeamSection({
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         variants={{
           hidden: {},
-          show: {
-            transition: {
-              staggerChildren: 0.15,
-            },
-          },
+          show: { transition: { staggerChildren: 0.15 } },
         }}
         initial="hidden"
         whileInView="show"
@@ -272,6 +207,7 @@ function TeamSection({
   );
 }
 
+// ---------------- Card ----------------
 function Card({ person, subtle }: { person: Person; subtle?: boolean }) {
   return (
     <motion.div
@@ -310,6 +246,7 @@ function Card({ person, subtle }: { person: Person; subtle?: boolean }) {
   );
 }
 
+// ---------------- Avatar ----------------
 function Avatar({ name }: { name: string }) {
   const initials = name
     .split(" ")
@@ -324,36 +261,5 @@ function Avatar({ name }: { name: string }) {
   );
 }
 
-function IconButton({
-  href = "#",
-  children,
-  label,
-}: {
-  href?: string;
-  children: React.ReactNode;
-  label: string;
-}) {
-  return (
-    <Link
-      href={href}
-      aria-label={label}
-      className="h-9 w-9 rounded-full border border-neutral-200 grid place-items-center hover:bg-neutral-50"
-    >
-      {children}
-    </Link>
-  );
-}
-
-export type Person = {
-  image: any;
-  id: string;
-  name: string;
-  title: string;
-  group: "Founders" | "Leadership" | "Team" | "Volunteers" | string;
-  email?: string;
-  socials?: {
-    linkedin?: string;
-    twitter?: string;
-    github?: string;
-  };
-};
+// ---------------- Team Groups ----------------
+type TeamGroup = "Founders" | "Leadership" | "Team" | "Volunteers";

@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 
 import InfoImg from "../../../../public/images/Ab4.jpg";
@@ -8,7 +10,11 @@ export default function AboutInfo() {
     <section className="py-10 px-6 md:px-14 h-full">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-14">
         <div className="w-full md:w-[50%]">
-          <Image src={InfoImg} className="rounded-[15px]" alt="" />
+          <Image
+            src={InfoImg}
+            className="rounded-[15px]"
+            alt="About Golden Height Foundation"
+          />
         </div>
         <div className="w-full md:w-[50%]">
           <h3 className="text-[30px] text-[#0e372d] md:text-[25px] lg:text-[38px] font-semibold">
@@ -16,7 +22,7 @@ export default function AboutInfo() {
           </h3>
           <p className="text-gray-500 mt-3">
             Golden Height Foundation (GHF) was born out of a lifelong passion
-            for helping others a passion I carried with me from childhood. But
+            for helping others, a passion I carried with me from childhood. But
             in June 2019, that passion transformed into a clear mission. One
             sunny afternoon, I took my daughters to a popular hotel pool in Cape
             Coast, Ghana. As we waited for the pool to be cleaned, I noticed
@@ -38,15 +44,15 @@ export default function AboutInfo() {
             gratitude, empathy, and responsibility in me.
           </p>
 
-          <div className=" flex items-center gap-2 mt-4 md:mt-10">
+          <div className="flex items-center gap-2 mt-4 md:mt-10">
             <Image
               src={InfoProfile}
-              alt=""
+              alt="Dr (Mrs) Mavis Opoku Boadu"
               className="w-[80px] h-[80px] rounded-full"
             />
-            <div className="">
+            <div>
               <h4 className="text-[#0e372d] font-semibold">
-                Dr (Mrs) Mavis Opoku Boadu"
+                Dr (Mrs) Mavis Opoku Boadu
               </h4>
               <p className="text-[13px] text-[#c4a54a]">
                 Founder/Executive Director
