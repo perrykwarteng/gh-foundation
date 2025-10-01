@@ -20,6 +20,7 @@ export default function Home() {
       <Regions />
       <Stats />
       <Testimonials />
+      <Organization />
     </Layout>
   );
 }

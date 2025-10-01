@@ -201,7 +201,6 @@ export default function Team() {
             subtle
           />
         </main>
-        <Blog />
       </div>
     </Layout>
   );

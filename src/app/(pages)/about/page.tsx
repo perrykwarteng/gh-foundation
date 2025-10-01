@@ -41,7 +41,7 @@ export default function About() {
           />
         </motion.div>
 
-        <motion.div
+        {/* <motion.div
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
@@ -49,7 +49,7 @@ export default function About() {
           className="mt-5 md:mt-8"
         >
           <Stats color="bg-[#F8F9FA]" />
-        </motion.div>
+        </motion.div> */}
 
         <motion.div
           variants={fadeUp}
@@ -93,14 +93,14 @@ export default function About() {
           <Regions />
         </motion.div>
 
-        <motion.div
+        {/* <motion.div
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
           <Blog />
-        </motion.div>
+        </motion.div> */}
       </section>
     </Layout>
   );
