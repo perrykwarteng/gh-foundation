@@ -18,11 +18,11 @@ export default function AboutInfo() {
         </div>
         <div className="w-full md:w-[50%]">
           <h3 className="text-[30px] text-[#0e372d] md:text-[25px] lg:text-[38px] font-semibold">
-            Make a Difference, Support Those in Need.
+            Our Story
           </h3>
           <p className="text-gray-500 mt-3">
             Golden Height Foundation (GHF) was born out of a lifelong passion
-            for helping others, a passion I carried with me from childhood. But
+            for helping others a passion I carried with me from childhood. But
             in June 2019, that passion transformed into a clear mission. One
             sunny afternoon, I took my daughters to a popular hotel pool in Cape
             Coast, Ghana. As we waited for the pool to be cleaned, I noticed
@@ -41,9 +41,16 @@ export default function AboutInfo() {
             to be there too, but lacked the means. Or maybe they didn&apos;t
             even know where their children were at that time, a stark reminder
             of the hardships many families face. That thought stirred a wave of
-            gratitude, empathy, and responsibility in me.
+            gratitude, empathy, and responsibility in me. Collaborating with
+            like-minded people, we asked: “What can we do? How can we give back
+            to children and to the women raising them so they too can dream and
+            provide opportunities for their families?” The answer was simple but
+            powerful: Books. Learning materials. Opportunities. Skills.
+            Empowerment. That poolside encounter planted the seed for Golden
+            Height Foundation, a movement dedicated to helping children unlock
+            their potential through education and helping women gain skills and
+            independence to lift their families and communities.
           </p>
-
           <div className="flex items-center gap-2 mt-4 md:mt-10">
             <Image
               src={InfoProfile}
