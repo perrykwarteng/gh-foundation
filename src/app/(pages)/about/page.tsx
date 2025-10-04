@@ -11,6 +11,8 @@ import Regions from "@/app/components/Regions/Region";
 import Stats from "@/app/components/Stats/Stats";
 import { useState } from "react";
 import { motion, Variants } from "framer-motion";
+import WhatWeDo from "@/app/components/abouts-comp/WhatWeDo";
+import CoreValues from "@/app/components/abouts-comp/CoreValues";
 
 export default function About() {
   const [showVideo, setShowVideo] = useState(false);
@@ -68,6 +70,8 @@ export default function About() {
         >
           <AboutOrganization />
         </motion.div>
+        <CoreValues />
+        <WhatWeDo />
 
         <motion.div
           variants={fadeUp}
