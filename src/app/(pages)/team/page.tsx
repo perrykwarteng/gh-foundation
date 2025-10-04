@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-import { Search, ChevronDown } from "lucide-react";
+import React, { useMemo } from "react";
 import Layout from "@/app/components/Layouts/AppLayout";
 import HeroText from "@/app/components/Hero-text/Hero-text";
-import Blog from "@/app/components/Blog/Blog";
 import { motion } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
+import { Linkedin, Twitter, Github } from "lucide-react";
 
 import GabrielImg from "../../../../public/images/team/Gabriel.jpeg";
 import MavisImg from "../../../../public/images/team/Mavis.jpeg";
@@ -19,6 +18,7 @@ export type Person = {
   name: string;
   title: string;
   group: "Founders" | "Leadership" | "Team" | "Volunteers" | string;
+  bio?: string;
   email?: string;
   socials?: {
     linkedin?: string;
@@ -28,71 +28,73 @@ export type Person = {
 };
 
 export default function Team() {
-  const [q, setQ] = useState("");
-  const [role, setRole] = useState<TeamGroup | "All">("All");
-
-  const roles: TeamGroup[] = ["Founders", "Leadership", "Team", "Volunteers"];
-
   const people: Person[] = useMemo(
     () => [
-      // ------- FOUNDERS -------
       {
         id: "p1",
         name: "Dr (Mrs) Mavis Opoku Boadu",
         title: "Founder/Executive Director",
         group: "Founders",
         image: MavisImg,
-        socials: { linkedin: "#", twitter: "#" },
+        bio: "Mavis leads Golden Height Foundation with a vision to empower children and women through education and vocational training.",
+        socials: {
+          linkedin: "https://linkedin.com/in/mavis",
+        },
       },
-      // ------- LEADERSHIP -------
       {
         id: "p2",
         name: "Dr Prince Akowuah Aning",
         title: "Strategy Advisor",
         group: "Leadership",
         image: PrinceImg,
-        socials: { linkedin: "#" },
+        bio: "Prince provides strategic direction, helping the foundation align its programs with long-term growth and sustainability.",
+        socials: {
+          linkedin: "https://linkedin.com/in/prince",
+          twitter: "https://twitter.com/prince",
+        },
       },
       {
         id: "p3",
         name: "Mrs Rosetta Marfowaa Asare",
-        title: "Doner & Partnerships Manager",
+        title: "Donor & Partnerships Manager",
         group: "Leadership",
         image: RosettaImg,
-        socials: { linkedin: "#" },
+        bio: "Rosetta manages partnerships and donor relationships, ensuring impactful collaborations across Ghana and beyond.",
+        socials: {
+          linkedin: "https://linkedin.com/in/rosetta",
+          twitter: "https://twitter.com/rosetta",
+        },
       },
       {
         id: "p5",
         name: "Mr Matthew Amissah",
         title: "Treasurer",
         group: "Leadership",
+        bio: "Matthew oversees the financial management of the foundation, ensuring transparency and accountability in all projects.",
+        socials: {
+          linkedin: "https://linkedin.com/in/matthew",
+          twitter: "https://twitter.com/matthew",
+        },
       },
       {
         id: "p6",
         name: "Mr Gabriel",
-        title: "",
+        title: "Programs Coordinator",
         group: "Leadership",
         image: GabrielImg,
-        socials: { linkedin: "#" },
+        bio: "Gabriel coordinates the implementation of programs, ensuring resources reach schools and communities in need.",
+        socials: {
+          twitter: "https://twitter.com/rosetta",
+        },
       },
     ],
     []
   );
 
-  const filtered = useMemo(() => {
-    const qLower = q.trim().toLowerCase();
-    return people.filter((p) => {
-      const matchQuery =
-        !qLower ||
-        `${p.name} ${p.title} ${p.group}`.toLowerCase().includes(qLower);
-      const matchRole = role === "All" || p.group === role;
-      return matchQuery && matchRole;
-    });
-  }, [people, q, role]);
-
   return (
     <Layout>
       <div className="min-h-screen bg-white text-black">
+        {/* Header */}
         <header className="py-10 px-6 md:px-14 bg-gradient-to-b from-neutral-50 to-white">
           <HeroText
             title="Our Team"
@@ -101,59 +103,24 @@ export default function Team() {
           />
         </header>
 
+        {/* Team Sections */}
         <main className="py-10 px-6 md:px-14">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col sm:flex-row items-stretch justify-end sm:items-center gap-3"
-          >
-            {/* Search */}
-            <div className="flex items-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 h-12 w-full sm:w-[360px]">
-              <Search className="h-5 w-5 text-neutral-500" />
-              <input
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder="Search name, role or group…"
-                className="w-full outline-none placeholder-neutral-400"
-              />
-            </div>
-
-            {/* Role select */}
-            <div className="relative">
-              <select
-                value={role}
-                onChange={(e) => setRole(e.target.value as TeamGroup | "All")}
-                className="appearance-none pr-10 pl-4 h-12 rounded-xl border border-neutral-200 bg-white text-sm font-medium"
-              >
-                <option value="All">All</option>
-                {roles.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
-            </div>
-          </motion.div>
-
-          {/* Team sections */}
           <TeamSection
             title="Founders"
-            people={filtered.filter((p) => p.group === "Founders")}
+            people={people.filter((p) => p.group === "Founders")}
             highlight
           />
           <TeamSection
             title="Leadership"
-            people={filtered.filter((p) => p.group === "Leadership")}
+            people={people.filter((p) => p.group === "Leadership")}
           />
           <TeamSection
             title="Team"
-            people={filtered.filter((p) => p.group === "Team")}
+            people={people.filter((p) => p.group === "Team")}
           />
           <TeamSection
             title="Volunteers"
-            people={filtered.filter((p) => p.group === "Volunteers")}
+            people={people.filter((p) => p.group === "Volunteers")}
             subtle
           />
         </main>
@@ -188,8 +155,9 @@ function TeamSection({
         <h2 className="text-2xl md:text-3xl font-semibold">{title}</h2>
       </div>
 
+      {/* Bigger Cards */}
       <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
         variants={{
           hidden: {},
           show: { transition: { staggerChildren: 0.15 } },
@@ -211,35 +179,74 @@ function Card({ person, subtle }: { person: Person; subtle?: boolean }) {
   return (
     <motion.div
       variants={{
-        hidden: { opacity: 0, scale: 0.9, y: 30 },
-        show: { opacity: 1, scale: 1, y: 0 },
+        hidden: { opacity: 0, y: 30 },
+        show: { opacity: 1, y: 0 },
       }}
       transition={{ duration: 0.5 }}
-      className="group rounded-2xl border border-neutral-200 bg-white p-6 shadow-[0_6px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)] transition"
+      className="group rounded-2xl border border-neutral-200 bg-white shadow hover:shadow-lg transition overflow-hidden"
     >
-      <div className="flex items-center gap-4">
-        {person.image ? (
-          <Image
-            src={person.image}
-            alt={person.name}
-            className="w-[48px] h-[48px] rounded-full object-cover"
-          />
-        ) : (
-          <Avatar name={person.name} />
-        )}
-        <div>
-          <h3 className="text-lg font-semibold tracking-tight">
-            {person.name}
-          </h3>
-          <p
-            className={`text-sm ${
-              subtle ? "text-neutral-500" : "text-neutral-600"
-            }`}
-          >
-            {person.title}
+      {person.image ? (
+        <Image
+          src={person.image}
+          alt={person.name}
+          className="w-full h-80 object-cover"
+        />
+      ) : (
+        <Avatar name={person.name} />
+      )}
+
+      <div className="p-6 flex flex-col h-full">
+        <h3 className="text-xl font-semibold text-[#0e372d]">{person.name}</h3>
+        <p
+          className={`text-sm mt-1 ${
+            subtle ? "text-neutral-500" : "text-neutral-600"
+          }`}
+        >
+          {person.title}
+        </p>
+        <p className="text-xs text-neutral-400">{person.group}</p>
+
+        {person.bio && (
+          <p className="mt-3 text-sm text-neutral-600 leading-relaxed">
+            {person.bio}
           </p>
-          <p className="mt-0.5 text-xs text-neutral-400">{person.group}</p>
-        </div>
+        )}
+
+        {/* Socials */}
+        {person.socials && (
+          <div className="flex gap-4 mt-4">
+            {person.socials.linkedin && (
+              <a
+                href={person.socials.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-neutral-500 hover:text-[#0e372d] transition"
+              >
+                <Linkedin size={20} />
+              </a>
+            )}
+            {person.socials.twitter && (
+              <a
+                href={person.socials.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-neutral-500 hover:text-[#0e372d] transition"
+              >
+                <Twitter size={20} />
+              </a>
+            )}
+            {person.socials.github && (
+              <a
+                href={person.socials.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-neutral-500 hover:text-[#0e372d] transition"
+              >
+                <Github size={20} />
+              </a>
+            )}
+          </div>
+        )}
       </div>
     </motion.div>
   );
@@ -254,11 +261,8 @@ function Avatar({ name }: { name: string }) {
     .join("")
     .toUpperCase();
   return (
-    <div className="h-14 w-14 rounded-full bg-neutral-100 border border-neutral-200 grid place-items-center text-neutral-700 font-semibold">
+    <div className="w-full h-80 bg-neutral-100 border-b border-neutral-200 grid place-items-center text-neutral-700 text-4xl font-semibold">
       {initials}
     </div>
   );
 }
-
-// ---------------- Team Groups ----------------
-type TeamGroup = "Founders" | "Leadership" | "Team" | "Volunteers";
