@@ -4,12 +4,11 @@ import Image from "next/image";
 import React from "react";
 import { motion } from "framer-motion";
 
-import WhatWeDoImg from "../../../../public/images/Ab3.jpg";
+import WhatWeDoImg from "../../../../public/images/wwd.jpg";
 
 export default function WhatWeDo() {
   return (
     <section className="h-full bg-white flex flex-col md:flex-row py-10 px-6 md:px-14 overflow-hidden">
-      {/* Left: Image */}
       <motion.div
         className="w-full md:w-1/2 flex justify-center"
         initial={{ opacity: 0, x: -100 }}
@@ -29,7 +28,6 @@ export default function WhatWeDo() {
         </div>
       </motion.div>
 
-      {/* Right: Content */}
       <motion.div
         className="w-full md:w-1/1 mt-8 md:mt-0"
         initial={{ opacity: 0, x: 100 }}
