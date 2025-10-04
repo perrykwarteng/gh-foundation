@@ -17,11 +17,13 @@ export default function Footer() {
               <Image src={Logo} alt="" />
             </div>
             <p className="text-white mt-2">
-              Golden Height Foundation (GHF) was born out of a lifelong passion
+              Golden Height Foundation is more than a charity, it is a movement
               <br />
-              for helping others a passion I carried with me from childhood.
+              of empathy, hope and action. By supporting children and empowering
               <br />
-              But in June 2019, that passion transformed into a clear mission.
+              women, we aim to build stronger families and brighter <br />
+              communities where everyone can rise beyond limits, toward <br />{" "}
+              golden heights.
             </p>
             <div className="mt-2">
               <p className="text-gray-400">

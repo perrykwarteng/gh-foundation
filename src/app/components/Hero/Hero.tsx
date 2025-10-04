@@ -86,7 +86,7 @@ export const Hero = () => {
           communities thrive. Our mission is simple: by empowering one person at
           a time, we create lasting, meaningful change that ripples through
           generations. Together, we are shaping a brighter, more inclusive
-          future for all,
+          future for all.
         </motion.p>
 
         <motion.div
