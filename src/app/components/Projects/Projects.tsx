@@ -25,9 +25,9 @@ export const projectsData: Project[] = [
     title: "Donation to Schools",
     description:
       "Your contribution will put smiles on faces, light hope in young hearts, and provide the foundation for brighter futures.",
-    goal: 20000,
-    raised: 8000,
-    donations: 14,
+    goal: 47000,
+    raised: 0,
+    donations: 0,
   },
   {
     id: 2,
