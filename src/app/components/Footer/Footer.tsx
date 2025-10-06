@@ -105,7 +105,7 @@ export default function Footer() {
               target="_blank"
               className="bg-white w-6 h-6 flex items-center justify-center rounded-full opacity-50 hover:opacity-100 transition-all duration-100"
             >
-              <Linkedin className="w-3.5 h-3.5" />
+              <Linkedin className="text-black w-3.5 h-3.5" />
             </Link>
 
             <Link
