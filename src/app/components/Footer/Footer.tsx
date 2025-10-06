@@ -3,6 +3,8 @@ import Logo from "../../../../public/icons/GHF-LOGO.png";
 import Facebook from "../../../../public/icons/Facebook.svg";
 import X from "../../../../public/icons/X.svg";
 import Instagram from "../../../../public/icons/Instagram.svg";
+import Tiktok from "../../../../public/icons/tiktok.png";
+import { Linkedin } from "lucide-react";
 import Link from "next/link";
 
 export default function Footer() {
@@ -88,27 +90,53 @@ export default function Footer() {
         </div>
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between mt-10">
           <div className="flex items-center gap-4">
-            <Link href="#">
+            <Link
+              href="https://www.web.facebook.com/profile.php?id=100075729007289"
+              target="_blank"
+            >
               <Image
                 src={Facebook}
                 alt="Facebook Icon"
                 className="opacity-50 hover:opacity-100 transition-all duration-100"
               />
             </Link>
+            <Link
+              href="https://www.linkedin.com/company/golden-height-foundation/about/"
+              target="_blank"
+              className="bg-white w-6 h-6 flex items-center justify-center rounded-full opacity-50 hover:opacity-100 transition-all duration-100"
+            >
+              <Linkedin className="w-3.5 h-3.5" />
+            </Link>
 
-            <Link href="#">
+            <Link
+              href="https://x.com/Goldenheight_gh?t=LViynigxig2P7iVUDZc_tg&s=08"
+              target="_blank"
+            >
               <Image
                 src={X}
                 alt="X Icon"
                 className="opacity-50 hover:opacity-100 transition-all duration-100"
               />
             </Link>
-
-            <Link href="#">
+            <Link
+              href="https://www.instagram.com/goldenheightfoundation/"
+              target="_blank"
+            >
               <Image
                 src={Instagram}
                 alt="Instagram Icon"
                 className="opacity-50 hover:opacity-100 transition-all duration-100"
+              />
+            </Link>
+            <Link
+              href="https://www.tiktok.com/@golden.height.fou?_t=ZM-9006aRS1mWq&_r=1"
+              target="_blank"
+              className="bg-white w-6 h-6 flex items-center justify-center rounded-full opacity-50 hover:opacity-100 transition-all duration-100"
+            >
+              <Image
+                src={Tiktok}
+                alt="Instagram Icon"
+                className="w-3.5 h-3.5"
               />
             </Link>
           </div>
