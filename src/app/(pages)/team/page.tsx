@@ -5,7 +5,7 @@ import Layout from "@/app/components/Layouts/AppLayout";
 import HeroText from "@/app/components/Hero-text/Hero-text";
 import { motion } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
-import { Linkedin, Twitter, Github } from "lucide-react";
+import { Linkedin, Twitter, Github, } from "lucide-react";
 
 import GabrielImg from "../../../../public/images/team/Gabriel.jpeg";
 import MavisImg from "../../../../public/images/team/Mavis.jpeg";

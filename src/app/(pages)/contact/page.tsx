@@ -13,6 +13,8 @@ import Facebook from "../../../../public/icons/Facebook.svg";
 import X from "../../../../public/icons/X.svg";
 import Instagram from "../../../../public/icons/Instagram.svg";
 import ContactImg from "../../../../public/images/ContactImg.svg";
+import Tiktok from "../../../../public/icons/tiktok.png";
+import { Linkedin } from "lucide-react";
 import Link from "next/link";
 
 export default function Contact() {
@@ -45,13 +47,15 @@ export default function Contact() {
             viewport={{ once: true }}
             transition={{ duration: 0.7, ease: "easeOut" }}
           >
-            <h3 className="text-white font-semibold text-3xl md:text-[40px] leading-tight">
-              Share love, <br /> donate hope.
+            <h3 className="text-white capitalize font-semibold text-3xl md:text-[40px] leading-tight">
+              Unlocking Potential, <br />
+              Transforming Communities
             </h3>
             <p className="text-gray-400 mt-3 text-sm md:text-base leading-relaxed">
-              Golden Height Foundation (GHF) was born out of a lifelong passion
-              for helping others — a passion I carried from childhood. In June
-              2019, that passion transformed into a clear mission.
+              Golden Height Foundation is more than a charity, it is a movement
+              of empathy, hope and action. By supporting children and empowering
+              women, we aim to build stronger families and brighter communities
+              where everyone can rise beyond limits, toward golden heights.
             </p>
 
             <p className="text-white font-medium mt-8 mb-4 text-sm md:text-base">
@@ -81,25 +85,53 @@ export default function Contact() {
             </div>
 
             <div className="flex items-center gap-5 mt-10">
-              <Link href="#">
+              <Link
+                href="https://www.web.facebook.com/profile.php?id=100075729007289"
+                target="_blank"
+              >
                 <Image
                   src={Facebook}
                   alt="Facebook Icon"
-                  className="opacity-60 hover:opacity-100 transition duration-200"
+                  className="opacity-50 hover:opacity-100 transition-all duration-100"
                 />
               </Link>
-              <Link href="#">
+              <Link
+                href="https://www.linkedin.com/company/golden-height-foundation/about/"
+                target="_blank"
+                className="bg-white w-6 h-6 flex items-center justify-center rounded-full opacity-50 hover:opacity-100 transition-all duration-100"
+              >
+                <Linkedin className="w-3.5 h-3.5" />
+              </Link>
+
+              <Link
+                href="https://x.com/Goldenheight_gh?t=LViynigxig2P7iVUDZc_tg&s=08"
+                target="_blank"
+              >
                 <Image
                   src={X}
                   alt="X Icon"
-                  className="opacity-60 hover:opacity-100 transition duration-200"
+                  className="opacity-50 hover:opacity-100 transition-all duration-100"
                 />
               </Link>
-              <Link href="#">
+              <Link
+                href="https://www.instagram.com/goldenheightfoundation/"
+                target="_blank"
+              >
                 <Image
                   src={Instagram}
                   alt="Instagram Icon"
-                  className="opacity-60 hover:opacity-100 transition duration-200"
+                  className="opacity-50 hover:opacity-100 transition-all duration-100"
+                />
+              </Link>
+              <Link
+                href="https://www.tiktok.com/@golden.height.fou?_t=ZM-9006aRS1mWq&_r=1"
+                target="_blank"
+                className="bg-white w-6 h-6 flex items-center justify-center rounded-full opacity-50 hover:opacity-100 transition-all duration-100"
+              >
+                <Image
+                  src={Tiktok}
+                  alt="Instagram Icon"
+                  className="w-3.5 h-3.5"
                 />
               </Link>
             </div>
@@ -112,7 +144,12 @@ export default function Contact() {
             viewport={{ once: true }}
             transition={{ duration: 0.7, ease: "easeOut" }}
           >
-            <form className="space-y-6">
+            <form
+              action="mailto:info@goldenheightfoundation.org?cc=moboadu@goldenheightfoundation.org"
+              method="post"
+              encType="text/plain"
+              className="space-y-6"
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-black font-semibold mb-2">
