@@ -86,7 +86,7 @@ export default function Team() {
         image: GabrielImg,
         bio: "Gabriel coordinates the implementation of programs, ensuring resources reach schools and communities in need.",
         socials: {
-          twitter: "https://twitter.com/rosetta",
+          linkedin: "https://linkedin.com/in/gadowuona",
         },
       },
     ],
