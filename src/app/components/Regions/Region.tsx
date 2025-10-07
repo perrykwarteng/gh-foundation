@@ -183,7 +183,7 @@ export default function GhanaMap() {
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 800 900"
-          className="w-[600px] h-auto"
+          className="w-[300px] md:w-[600px] h-auto"
         >
           {/* Regions */}
           {mapPaths.map(({ d, name, isOneOfFive }, i) => (

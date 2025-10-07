@@ -13,6 +13,7 @@ import { useState } from "react";
 import { motion, Variants } from "framer-motion";
 import WhatWeDo from "@/app/components/abouts-comp/WhatWeDo";
 import CoreValues from "@/app/components/abouts-comp/CoreValues";
+import SDGsSection from "@/app/components/abouts-comp/SdgSection";
 
 export default function About() {
   const [showVideo, setShowVideo] = useState(false);
@@ -72,7 +73,7 @@ export default function About() {
         </motion.div>
         <CoreValues />
         <WhatWeDo />
-
+        <SDGsSection />
         <motion.div
           variants={fadeUp}
           initial="hidden"
