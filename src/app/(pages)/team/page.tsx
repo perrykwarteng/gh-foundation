@@ -12,6 +12,7 @@ import MavisImg from "../../../../public/images/team/Mavis.jpeg";
 import RosettaImg from "../../../../public/images/team/Rosetta.jpeg";
 import PrinceImg from "../../../../public/images/team/Prince.jpeg";
 import MatthewImg from "../../../../public/images/team/Matthew.jpeg";
+import IsaacImg from "../../../../public/images/team/Isaac.jpeg";
 
 export type Person = {
   image?: StaticImageData | null;
@@ -33,7 +34,7 @@ export default function Team() {
     () => [
       {
         id: "p1",
-        name: "Dr (Mrs) Mavis Opoku Boadu",
+        name: "Dr (Mrs) Mavis Opoku Boadu (CA)",
         title: "Founder/Executive Director",
         group: "Founder",
         image: MavisImg,
@@ -68,11 +69,11 @@ export default function Team() {
       },
       {
         id: "p5",
-        name: "Mr Matthew Amissah",
+        name: "Mr Matthew Amissah (CA)",
         title: "Treasurer",
         group: "Leadership",
         image: MatthewImg,
-        bio: "Matthew oversees the financial management of the foundation, ensuring transparency and accountability in all projects.",
+        bio: "Matthew oversees the financial management of the foundation, Having a strong background in finance and management, Matthew ensures sound financial planning, compliance, and strategic decision-making to support the company’s growth objectives. He holds an MBA (Finance) and is a member of the Institute of Chartered Accountants, Ghana (ICAG). Amissah is a charismatic leader, a dedicated team player, and a goal-oriented professional committed to excellence and organizational success.",
         socials: {
           linkedin: "https://linkedin.com/in/matthew",
           twitter: "https://twitter.com/matthew",
@@ -80,13 +81,23 @@ export default function Team() {
       },
       {
         id: "p6",
-        name: "Mr Gabriel",
+        name: "Mr Gabriel Annan Dowuona (MSc. IT)",
         title: "Programs Coordinator",
         group: "Leadership",
         image: GabrielImg,
-        bio: "Gabriel coordinates the implementation of programs, ensuring resources reach schools and communities in need.",
+        bio: "Gabriel Annan Dowuona is a computer engineer with over 15years experience in IT Support, IT Project Management, Database Management, Computer networking, Systems Administration, and Cloud Computing. He is a certified Professional Ethical Hacker, Amazon Cloud Practitioner, A member of Internet Society, A member of the Information Technology and Disaster Resource Center, A certified Cybersecurity Practitioner with the Cybersecurity Authority Ghana.",
         socials: {
           linkedin: "https://linkedin.com/in/gadowuona",
+        },
+      },
+      {
+        id: "p7",
+        name: "Mr Isaac Yeboah Nsaful",
+        title: "Head of Administration",
+        group: "Leadership",
+        image: IsaacImg,
+        socials: {
+          linkedin: "https://linkedin.com/in/",
         },
       },
     ],
