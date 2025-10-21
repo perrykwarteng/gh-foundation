@@ -10,7 +10,11 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 
-export default function Navbar() {
+type NavbarProps = {
+  onDonateClick: () => void;
+};
+
+export default function Navbar({ onDonateClick }: NavbarProps) {
   const pathName = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
@@ -112,7 +116,10 @@ export default function Navbar() {
       </nav>
 
       <div className="hidden md:block">
-        <button className="bg-[#c4a54a] hover:bg-[#d1b358] text-white font-medium px-4 md:px-6 py-1 md:py-1.5 rounded-[12px]">
+        <button
+          onClick={onDonateClick}
+          className="bg-[#c4a54a] hover:bg-[#d1b358] text-white font-medium px-4 md:px-6 py-1 md:py-1.5 rounded-[12px]"
+        >
           Donate
         </button>
       </div>
@@ -218,7 +225,10 @@ export default function Navbar() {
                 )
               )}
               <li>
-                <button className="bg-[#c4a54a] hover:bg-[#d1b358] text-white font-medium px-6 py-2 rounded-[12px]">
+                <button
+                  onClick={onDonateClick}
+                  className="bg-[#c4a54a] hover:bg-[#d1b358] text-white font-medium px-6 py-2 rounded-[12px]"
+                >
                   Donate
                 </button>
               </li>
