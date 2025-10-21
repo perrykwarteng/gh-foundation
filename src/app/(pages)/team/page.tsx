@@ -38,7 +38,7 @@ export default function Team() {
         title: "Founder/Executive Director",
         group: "Founder",
         image: MavisImg,
-        bio: "Mavis leads Golden Height Foundation with a vision to empower children and women through education and vocational training.",
+        bio: "Dr. (Mrs.) Mavis Opoku-Boadu is a distinguished Chartered Accountant, Financial Consultant, and Philanthropist whose passion extends far beyond numbers. A dynamic Motivational Speaker, Moderator, and devoted Advocate for Children and Women, she embodies compassion in action. Drawing on her rich experience as a mother, wife, and professional, Mavis blends expertise with empathy, transforming lives through purpose-driven leadership. At the Golden Height Foundation, she champions education, women’s empowerment, and community transformation, guided by an unwavering belief that every child and woman deserves the chance to learn, rise, and thrive.",
         socials: {
           linkedin: "https://www.linkedin.com/in/dr-mrs-mavis-opoku-boadu",
         },
@@ -49,7 +49,7 @@ export default function Team() {
         title: "Strategy Advisor",
         group: "Leadership",
         image: PrinceImg,
-        bio: "Prince provides strategic direction, helping the foundation align its programs with long-term growth and sustainability.",
+        bio: "Dr. Prince Aning is a strategist, academic, and managing consultant with extensive business experience in Africa and the UK. Holding a PhD from the UK focused on business innovation in challenging environments, he lectures at Ashesi University and the University of Utah, and advises growth-oriented SMEs across Africa. A passionate advocate for Africa’s economic transformation, he provides research-backed insights on strategy, entrepreneurship, and industrial policy. At Golden Height Foundation, Dr. Aning brings his expertise to strengthen strategic planning, sustainability, and impact-driven growth.",
         socials: {
           linkedin: "https://linkedin.com/in/prince",
           twitter: "https://twitter.com/prince",
@@ -61,7 +61,7 @@ export default function Team() {
         title: "Donor & Partnerships Manager",
         group: "Leadership",
         image: RosettaImg,
-        bio: "Rosetta manages partnerships and donor relationships, ensuring impactful collaborations across Ghana and beyond.",
+        bio: "Rosetta Asare is a Senior Financial Analyst with over five years of experience in financial planning, forecasting, and executive reporting across organizations such as Veolia Water Technologies & Solutions and Canada Pension Plan Investments. Holding an MBA in Financial Management, she specializes in transforming complex data into clear, actionable strategies. Beyond her corporate career, Rosetta serves as Donor and Partnerships Manager at Golden Height Foundation, advancing its mission to unlock potential through education, empowerment, and collaboration. To her, Golden Height is more than an organization it’s a movement rooted in dignity and lasting change.",
         socials: {
           linkedin: "https://linkedin.com/in/rosetta",
           twitter: "https://twitter.com/rosetta",
@@ -93,8 +93,9 @@ export default function Team() {
       {
         id: "p7",
         name: "Mr Isaac Yeboah Nsaful",
-        title: "Head of Administration",
+        title: "Head on Administration & Training",
         group: "Leadership",
+        bio: "An accomplished administrator with proven expertise in organizational management, staff development, and operational efficiency within the Foundation. Adept at designing and implementing training programmes that build capacity and drive institutional performance. Committed to fostering excellence, accountability, and sustainable growth across all administrative and training functions of the Foundation.",
         image: IsaacImg,
         socials: {
           linkedin: "https://linkedin.com/in/",
