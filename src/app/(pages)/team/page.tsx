@@ -81,7 +81,7 @@ export default function Team() {
       },
       {
         id: "p6",
-        name: "Mr Gabriel Annan Dowuona (MSc. IT)",
+        name: "Mr Gabriel Annan Dowuona (CpEH)",
         title: "Programs Coordinator",
         group: "Leadership",
         image: GabrielImg,
@@ -93,7 +93,7 @@ export default function Team() {
       {
         id: "p7",
         name: "Mr Isaac Yeboah Nsaful",
-        title: "Head on Administration & Training",
+        title: "Head of Administration & Training",
         group: "Leadership",
         bio: "An accomplished administrator with proven expertise in organizational management, staff development, and operational efficiency within the Foundation. Adept at designing and implementing training programmes that build capacity and drive institutional performance. Committed to fostering excellence, accountability, and sustainable growth across all administrative and training functions of the Foundation.",
         image: IsaacImg,
