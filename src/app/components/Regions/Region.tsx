@@ -147,7 +147,7 @@ export default function GhanaMap() {
           variants={itemVariants}
           className="w-full text-[#0e372d] mt-3 leading-relaxed"
         >
-          We are currently operating in four regions across Ghana, focusing on
+          We are currently operating in five regions across Ghana, focusing on
           impactful projects that identify and unlock potentials. Our dedicated
           teams work closely with local communities to identify needs and
           implement sustainable solutions.
