@@ -29,12 +29,12 @@ export default function Footer() {
             </p>
             <div className="mt-2">
               <p className="text-gray-400">
-                <strong className="text-white">Momo numner:</strong>(+233) 55
+                <strong className="text-white">Momo number:</strong>(+233) 55
                 685 3499
               </p>
               <p className="text-gray-400 mt-1">
-                <strong className="text-white">Adderess: </strong>P O Box UC
-                171, University of Cape Coast,
+                <strong className="text-white">Address: </strong>P O Box UC 171,
+                University of Cape Coast,
                 <br />
                 Cape Coast
               </p>
