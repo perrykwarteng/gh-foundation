@@ -36,19 +36,19 @@ export const projectsData: Project[] = [
     description:
       "Supporting schools with books, uniforms, and tuition for underprivileged children.",
     goal: 15000,
-    raised: 6000,
-    donations: 9,
+    raised: 0,
+    donations: 0,
   },
-  {
-    id: 3,
-    image: Project3,
-    title: "Healthcare Access",
-    description:
-      "Building mobile clinics to provide essential healthcare in remote villages.",
-    goal: 20000,
-    raised: 12000,
-    donations: 22,
-  },
+  // {
+  //   id: 3,
+  //   image: Project3,
+  //   title: "Healthcare Access",
+  //   description:
+  //     "Building mobile clinics to provide essential healthcare in remote villages.",
+  //   goal: 20000,
+  //   raised: 12000,
+  //   donations: 22,
+  // },
 ];
 
 const containerVariants: Variants = {

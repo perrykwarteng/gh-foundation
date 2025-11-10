@@ -51,8 +51,8 @@ export default function Team() {
         image: PrinceImg,
         bio: "Dr. Prince Aning is a strategist, academic, and managing consultant with extensive business experience in Africa and the UK. Holding a PhD from the UK focused on business innovation in challenging environments, he lectures at Ashesi University and the University of Utah, and advises growth-oriented SMEs across Africa. A passionate advocate for Africa’s economic transformation, he provides research-backed insights on strategy, entrepreneurship, and industrial policy. At Golden Height Foundation, Dr. Aning brings his expertise to strengthen strategic planning, sustainability, and impact-driven growth.",
         socials: {
-          linkedin: "https://linkedin.com/in/prince",
-          twitter: "https://twitter.com/prince",
+          linkedin:
+            "https://www.linkedin.com/in/dr-prince-akowuah-aning-68a9694a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
         },
       },
       {
@@ -63,8 +63,7 @@ export default function Team() {
         image: RosettaImg,
         bio: "Rosetta Asare is a Senior Financial Analyst with over five years of experience in financial planning, forecasting, and executive reporting across organizations such as Veolia Water Technologies & Solutions and Canada Pension Plan Investments. Holding an MBA in Financial Management, she specializes in transforming complex data into clear, actionable strategies. Beyond her corporate career, Rosetta serves as Donor and Partnerships Manager at Golden Height Foundation, advancing its mission to unlock potential through education, empowerment, and collaboration. To her, Golden Height is more than an organization it’s a movement rooted in dignity and lasting change.",
         socials: {
-          linkedin: "https://linkedin.com/in/rosetta",
-          twitter: "https://twitter.com/rosetta",
+          linkedin: "https://www.linkedin.com/in/rosetta-aning/h",
         },
       },
       {
@@ -75,8 +74,8 @@ export default function Team() {
         image: MatthewImg,
         bio: "Matthew oversees the financial management of the foundation, Having a strong background in finance and management, Matthew ensures sound financial planning, compliance, and strategic decision-making to support the company’s growth objectives. He holds an MBA (Finance) and is a member of the Institute of Chartered Accountants, Ghana (ICAG). Amissah is a charismatic leader, a dedicated team player, and a goal-oriented professional committed to excellence and organizational success.",
         socials: {
-          linkedin: "https://linkedin.com/in/matthew",
-          twitter: "https://twitter.com/matthew",
+          linkedin:
+            "https://www.linkedin.com/in/amissah-matthew-a69256356?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
         },
       },
       {

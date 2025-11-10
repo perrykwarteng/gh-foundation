@@ -8,7 +8,7 @@ import VisionImg from "../../../../public/icons/vission.svg";
 export default function AboutOrganization() {
   return (
     <div className="py-10 px-6 md:px-14 h-full">
-      <div className="flex items-center gap-8">
+      <div className="flex flex-col md:flex-row items-center gap-8">
         <div className="w-full md:w-[50%]">
           <h3 className="text-[23px] md:text-[35px] font-semibold text-[#0e372d]">
             About our Organization
