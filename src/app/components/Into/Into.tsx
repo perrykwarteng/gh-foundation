@@ -93,7 +93,7 @@ export default function Into() {
               </h3>
               <p className="mt-2 text-gray-500">
                 Partner with local authorities <br /> to support schools across
-                Ghana’s 4 regions.
+                Ghana’s 5 regions.
               </p>
             </div>
           </motion.div>
