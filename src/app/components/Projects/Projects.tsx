@@ -7,6 +7,7 @@ import SingleProject from "../Single-Project/SingleProject";
 import Project1 from "../../../../public/images/project1.jpeg";
 import Project2 from "../../../../public/icons/projectImg2.svg";
 import Project3 from "../../../../public/icons/projectImg3.svg";
+import Link from "next/link";
 
 type Project = {
   id: number;
@@ -72,7 +73,7 @@ export default function Projects() {
           Upcoming Events
         </h3>
         <button className="border-2 text-[#0e372d] font-medium border-[#0e372d] hover:bg-[#0e372d] hover:text-white px-4 md:px-6 py-1 md:py-2 rounded-[10px] transition duration-300 ease-in-out">
-          More Projects
+          <Link href="/projects">More Projects</Link>
         </button>
       </div>
 

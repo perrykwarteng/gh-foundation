@@ -13,13 +13,20 @@ import RosettaImg from "../../../../public/images/team/Rosetta.jpeg";
 import PrinceImg from "../../../../public/images/team/Prince.jpeg";
 import MatthewImg from "../../../../public/images/team/Matthew.jpeg";
 import IsaacImg from "../../../../public/images/team/Isaac.jpeg";
+import StephenImg from "../../../../public/images/team/Stephen.jpeg";
 
 export type Person = {
   image?: StaticImageData | null;
   id: string;
   name: string;
   title: string;
-  group: "Founders" | "Leadership" | "Team" | "Volunteers" | string;
+  group:
+    | "Founders"
+    | "Leadership"
+    | "Team"
+    | "Volunteers"
+    | "Board of Trustees"
+    | string;
   bio?: string;
   email?: string;
   socials?: {
@@ -97,7 +104,18 @@ export default function Team() {
         bio: "An accomplished administrator with proven expertise in organizational management, staff development, and operational efficiency within the Foundation. Adept at designing and implementing training programmes that build capacity and drive institutional performance. Committed to fostering excellence, accountability, and sustainable growth across all administrative and training functions of the Foundation.",
         image: IsaacImg,
         socials: {
-          linkedin: "https://linkedin.com/in/",
+          linkedin: "https://www.linkedin.com/in/iynsaful/",
+        },
+      },
+      {
+        id: "p8",
+        name: "Mr. Stephen Onyinah-Karikari",
+        title: "Member",
+        group: "Board of Trustees",
+        bio: "",
+        image: StephenImg,
+        socials: {
+          linkedin: "https://www.linkedin.com/in/stephen-o-1b900b18/",
         },
       },
     ],
@@ -134,6 +152,11 @@ export default function Team() {
           <TeamSection
             title="Volunteers"
             people={people.filter((p) => p.group === "Volunteers")}
+            subtle
+          />
+          <TeamSection
+            title="Board of Trustees"
+            people={people.filter((p) => p.group === "Board of Trustees")}
             subtle
           />
         </main>
