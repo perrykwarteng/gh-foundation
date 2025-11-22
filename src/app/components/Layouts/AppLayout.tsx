@@ -44,6 +44,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
         <div className="bg-[#f7f7f7] text-gray-700 p-3 rounded-lg mt-4">
           <p className="font-semibold">Mobile Money Details:</p>
+          <p>Name: Golden Height Foundation</p>
           <p>Mobile Money: +233 54 123 4567</p>
         </div>
 
