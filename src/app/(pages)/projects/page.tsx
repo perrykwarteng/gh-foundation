@@ -41,7 +41,7 @@ const projectsData: Project[] = [
       "Supporting schools with books, uniforms, and tuition for underprivileged children.",
     goal: 0,
     raised: 0,
-    donations: 9,
+    donations: 0,
   },
 ];
 
