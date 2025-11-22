@@ -14,9 +14,9 @@ export default function UpcomingEvent() {
           ease: "linear",
         }}
       >
-        UPCOMING EVENT IN DECEMBER 2025 — Donation of back packs, exercise
-        books, pencil cases, pens, pencils, and other writing aids to 200 pupils
-        — ESTIMATED COST: GHS 47,000.00 (≈ USD 3,900)
+        UPCOMING EVENT ON 15TH JANUARY, 2026. Donation of back packs, exercise
+        books, pencil cases, pens, pencils, and other writing aids to 200
+        pupils. ESTIMATED COST: GHS 47,000.00 (≈ USD 3,900)
       </motion.div>
     </div>
   );
