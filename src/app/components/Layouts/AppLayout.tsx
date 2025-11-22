@@ -42,9 +42,14 @@ export default function Layout({ children }: { children: ReactNode }) {
           </p>
         </div>
 
-        <button className="mt-6 w-full bg-[#C4A54A] text-white py-2 rounded-lg font-medium hover:bg-[#a3893a] transition">
+        <div className="bg-[#f7f7f7] text-gray-700 p-3 rounded-lg mt-4">
+          <p className="font-semibold">Mobile Money Details:</p>
+          <p>Mobile Money: +233 54 123 4567</p>
+        </div>
+
+        {/* <button className="mt-6 w-full bg-[#C4A54A] text-white py-2 rounded-lg font-medium hover:bg-[#a3893a] transition">
           Donate Now
-        </button>
+        </button> */}
       </Modal>
     </div>
   );
