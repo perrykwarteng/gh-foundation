@@ -48,7 +48,7 @@ export default function Footer() {
           <div className="About">
             <h3 className="text-white text-[25px] font-semibold">About Us</h3>
             <ul className="flex flex-col gap-1.5 mt-2.5">
-              <Link className="text-gray-300 hover:text-white" href="">
+              <Link className="text-gray-300 hover:text-white" href="/about">
                 About Us
               </Link>
               <Link href="" className="text-gray-300 hover:text-white">
@@ -57,8 +57,8 @@ export default function Footer() {
               <Link href="" className="text-gray-300 hover:text-white">
                 Partners
               </Link>
-              <Link href="" className="text-gray-300 hover:text-white">
-                Partners Contact Us
+              <Link href="/contact" className="text-gray-300 hover:text-white">
+                Contact Us
               </Link>
             </ul>
           </div>
