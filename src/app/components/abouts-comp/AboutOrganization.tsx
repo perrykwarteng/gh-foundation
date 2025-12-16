@@ -40,6 +40,24 @@ export default function AboutOrganization() {
               school and every woman is empowered to build sustainable
               livelihoods and transform their communities.&quot;
             </p>
+            <div className="mt-6 flex flex-wrap gap-4">
+              <a
+                href="/brochures/GHFBrochure2025.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-3 rounded-lg bg-[#0e372d] text-white font-medium hover:bg-[#145a49] transition"
+              >
+                View Brochure
+              </a>
+
+              <a
+                href="/brochures/GHFBrochure2025.pdf"
+                download
+                className="px-5 py-3 rounded-lg border border-[#0e372d] text-[#0e372d] font-medium hover:bg-[#0e372d] hover:text-white transition"
+              >
+                Download PDF
+              </a>
+            </div>
           </div>
         </div>
         <div className="w-full md:w-[50%] flex gap-5">
