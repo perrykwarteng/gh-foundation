@@ -6,7 +6,6 @@ import SingleProject from "../Single-Project/SingleProject";
 
 import Project1 from "../../../../public/images/project1.jpeg";
 import Project2 from "../../../../public/icons/projectImg2.svg";
-import Project3 from "../../../../public/icons/projectImg3.svg";
 import Link from "next/link";
 
 type Project = {

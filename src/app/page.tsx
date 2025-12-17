@@ -8,7 +8,7 @@ import Stats from "./components/Stats/Stats";
 import Testimonials from "./components/Testimonials/Testimonial";
 import Transform from "./components/Transform/Transform";
 
-export default function Home() {
+export default async function Home() {
   return (
     <Layout>
       <Hero />

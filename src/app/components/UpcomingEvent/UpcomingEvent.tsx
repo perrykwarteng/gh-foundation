@@ -2,7 +2,11 @@
 
 import { motion } from "framer-motion";
 
-export default function UpcomingEvent() {
+interface UpcomingEventProps {
+  content?: string; // advertisement text
+}
+
+export default function UpcomingEvent({ content }: UpcomingEventProps) {
   return (
     <div className="w-full bg-[#C4A54A] text-white py-2 overflow-hidden">
       <motion.div
@@ -14,9 +18,8 @@ export default function UpcomingEvent() {
           ease: "linear",
         }}
       >
-        UPCOMING EVENT ON 15TH JANUARY, 2026. Donation of back packs, exercise
-        books, pencil cases, pens, pencils, and other writing aids to 200
-        pupils. ESTIMATED COST: GHS 47,000.00 (≈ USD 3,900)
+        {content ||
+          "UPCOMING EVENT — Details will be announced soon. Stay tuned!"}
       </motion.div>
     </div>
   );
