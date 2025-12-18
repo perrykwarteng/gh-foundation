@@ -16,8 +16,73 @@ import ContactImg from "../../../../public/images/ContactImg.svg";
 import Tiktok from "../../../../public/icons/tiktok.png";
 import { Linkedin } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function Contact() {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setSuccess("");
+    setError("");
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API}/contact-messages`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ data: formData }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      setSuccess(
+        "Thank you for your submission and we will contact you shortly!"
+      );
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+      });
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Layout>
       <div className="py-10 px-6 md:px-14 bg-white">
@@ -144,20 +209,18 @@ export default function Contact() {
             viewport={{ once: true }}
             transition={{ duration: 0.7, ease: "easeOut" }}
           >
-            <form
-              action="mailto:info@goldenheightfoundation.org?cc=moboadu@goldenheightfoundation.org"
-              method="post"
-              encType="text/plain"
-              className="space-y-6"
-            >
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-black font-semibold mb-2">
                     First Name
                   </label>
                   <input
-                    className="w-full h-12 rounded-md bg-white border border-neutral-200 px-4 outline-none focus:ring-2 focus:ring-[#C4A54A]/40 focus:border-[#C4A54A]/60 placeholder-neutral-400"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
                     placeholder="First Name"
+                    className="w-full h-12 rounded-md bg-white border border-neutral-200 px-4"
                   />
                 </div>
                 <div>
@@ -165,6 +228,9 @@ export default function Contact() {
                     Last Name
                   </label>
                   <input
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
                     className="w-full h-12 rounded-md bg-white border border-neutral-200 px-4 outline-none focus:ring-2 focus:ring-[#C4A54A]/40 focus:border-[#C4A54A]/60 placeholder-neutral-400"
                     placeholder="Last Name"
                   />
@@ -177,6 +243,9 @@ export default function Contact() {
                     Email Address
                   </label>
                   <input
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     className="w-full h-12 rounded-md bg-white border border-neutral-200 px-4 outline-none focus:ring-2 focus:ring-[#C4A54A]/40 focus:border-[#C4A54A]/60 placeholder-neutral-400"
                     placeholder="Email Address"
                     type="email"
@@ -187,6 +256,9 @@ export default function Contact() {
                     Phone Number
                   </label>
                   <input
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
                     className="w-full h-12 rounded-md bg-white border border-neutral-200 px-4 outline-none focus:ring-2 focus:ring-[#C4A54A]/40 focus:border-[#C4A54A]/60 placeholder-neutral-400"
                     placeholder="Phone Number"
                   />
@@ -198,6 +270,9 @@ export default function Contact() {
                   Subject
                 </label>
                 <input
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
                   className="w-full h-12 rounded-md bg-white border border-neutral-200 px-4 outline-none focus:ring-2 focus:ring-[#C4A54A]/40 focus:border-[#C4A54A]/60 placeholder-neutral-400"
                   placeholder="Subject"
                 />
@@ -208,6 +283,9 @@ export default function Contact() {
                   Message
                 </label>
                 <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
                   className="w-full min-h-[180px] rounded-md bg-white border border-neutral-200 px-4 py-3 outline-none focus:ring-2 focus:ring-[#C4A54A]/40 focus:border-[#C4A54A]/60 placeholder-neutral-400 resize-y"
                   placeholder="Message"
                 />
@@ -218,10 +296,17 @@ export default function Contact() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   type="submit"
-                  className="w-full md:w-auto inline-flex items-center justify-center px-8 h-12 rounded-xl bg-[#C4A54A] text-white font-semibold tracking-wide shadow-[0_10px_20px_rgba(196,165,74,0.35)] hover:brightness-95 transition"
+                  disabled={loading}
+                  className="w-full md:w-auto px-8 h-12 rounded-xl bg-[#C4A54A] text-white font-semibold"
                 >
-                  SEND MESSAGE
+                  {loading ? "SENDING..." : "SEND MESSAGE"}
                 </motion.button>
+                {success && (
+                  <p className="text-green-600 font-medium ms-3">{success}</p>
+                )}
+                {error && (
+                  <p className="text-red-600 font-medium ms-3">{error}</p>
+                )}
               </div>
             </form>
           </motion.div>
