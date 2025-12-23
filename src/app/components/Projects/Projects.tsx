@@ -1,55 +1,15 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
-import { StaticImageData } from "next/image";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import SingleProject from "../Single-Project/SingleProject";
 
-import Project1 from "../../../../public/images/project1.jpeg";
-import Project2 from "../../../../public/icons/projectImg2.svg";
-import Link from "next/link";
-
-type Project = {
-  id: number;
-  image: StaticImageData;
-  title: string;
-  description: string;
-  goal: number;
-  raised: number;
-  donations: number;
-};
-
-export const projectsData: Project[] = [
-  {
-    id: 1,
-    image: Project1,
-    title: "Donation to Schools",
-    description:
-      "Your contribution will put smiles on faces, light hope in young hearts, and provide the foundation for brighter futures.",
-    goal: 47000,
-    raised: 0,
-    donations: 0,
-  },
-  {
-    id: 2,
-    image: Project2,
-    title: "Education for Every Child",
-    description:
-      "Supporting schools with books, uniforms, and tuition for underprivileged children.",
-    goal: 15000,
-    raised: 0,
-    donations: 0,
-  },
-  // {
-  //   id: 3,
-  //   image: Project3,
-  //   title: "Healthcare Access",
-  //   description:
-  //     "Building mobile clinics to provide essential healthcare in remote villages.",
-  //   goal: 20000,
-  //   raised: 12000,
-  //   donations: 22,
-  // },
-];
+import {
+  fetchProjects,
+  PROJECTS_FALLBACK,
+  type Project,
+} from "@/app/lib/projects-content";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -65,6 +25,21 @@ const itemVariants: Variants = {
 };
 
 export default function Projects() {
+  const [projects, setProjects] = useState<Project[]>(PROJECTS_FALLBACK);
+
+  useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      const data = await fetchProjects();
+      if (mounted) setProjects(data);
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <div className="py-10 px-6 md:px-14 bg-white">
       <div className="flex items-center justify-between mb-8">
@@ -83,10 +58,10 @@ export default function Projects() {
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
       >
-        {projectsData.map((project) => (
+        {projects.slice(0, 3).map((project) => (
           <motion.div key={project.id} variants={itemVariants}>
             <SingleProject
-              image={project.image}
+              image={project.image as any}
               title={project.title}
               description={project.description}
               goal={project.goal}

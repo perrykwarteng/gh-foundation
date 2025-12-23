@@ -1,12 +1,107 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 
 import WhatWeDoImg from "../../../../public/images/wwd.jpg";
+import {
+  ABOUT_FALLBACK,
+  fetchAboutContent,
+  strapiUrl,
+  type AboutApiResponse,
+} from "@/app/lib/about-content";
+
+type Item = { title: string; body: string };
+
+function pickBestImageUrl(imageUrl?: string) {
+  const u = strapiUrl(imageUrl);
+  return u && typeof u === "string" ? u : "";
+}
+
+function extractTextFromBlock(block: any): string[] {
+  const nodes = block?.content ?? [];
+  return nodes
+    .map((p: any) =>
+      (p?.children ?? [])
+        .map((c: any) => (c?.text ? String(c.text) : ""))
+        .join("")
+    )
+    .map((t: string) => t.trim())
+    .filter(Boolean);
+}
+
+function buildWhatWeDoItems(lines: string[]): Item[] {
+  const items: Item[] = [];
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    const isHeading = /^\d+\.\s+/.test(line);
+    if (!isHeading) continue;
+
+    const title = line;
+    const body =
+      lines[i + 1] && !/^\d+\.\s+/.test(lines[i + 1]) ? lines[i + 1] : "";
+    items.push({ title, body });
+  }
+
+  return items;
+}
+
+const DEFAULT_ITEMS: Item[] = [
+  {
+    title: "1. Educational Support for Pupils",
+    body: "Golden Height addresses the resource gap in rural schools by equipping classrooms with solar-powered computer labs, libraries, and digital content. We provide backpacks, stationery, and teaching aids to ensure pupils are well-prepared, while also upgrading classrooms and reading corners into safe, engaging learning spaces. To enhance delivery, we train teachers in digital and computer skills, nurturing creativity and problem-solving among pupils.",
+  },
+  {
+    title: "2. Partnerships with Schools, Communities & Donors",
+    body: "We collaborate with the Ghana Education Service, PTAs, and local leaders to identify schools most in need. Our partnerships extend to international donor agencies, NGOs, corporate sponsors, and universities, ensuring interventions are well-resourced and sustainable. Together, we align local initiatives with global development goals, creating long-lasting impact.",
+  },
+  {
+    title: "3. Women’s Vocational Training & Empowerment",
+    body: "We empower rural women with practical vocational skills in soap-making, catering, tailoring, and beadwork, while also providing training in financial literacy, bookkeeping, and digital marketing. By supporting women-led cooperatives and enterprises, we help reduce poverty, strengthen family stability, and foster leadership in communities.",
+  },
+  {
+    title: "4. Sustainable & Scalable Impact",
+    body: "Our model begins with three annual school donations, allowing for measurable impact, and gradually scales toward monthly outreach programs. By leveraging solar energy and community ownership, we reinvest in libraries, computer labs, and women’s cooperatives, creating a cycle of empowerment where children access quality education, women achieve sustainable incomes, and entire communities thrive.",
+  },
+];
 
 export default function WhatWeDo() {
+  const [apiData, setApiData] = useState<AboutApiResponse | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      try {
+        const result = await fetchAboutContent();
+        if (mounted) setApiData(result);
+      } catch {
+        if (mounted) setApiData(ABOUT_FALLBACK);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const { imageUrl, items } = useMemo(() => {
+    const blocks = apiData?.data?.content ?? [];
+    const wwdBlock = blocks.find((b: any) => b?.id === 5);
+
+    const img = pickBestImageUrl(wwdBlock?.image?.url);
+
+    const lines = wwdBlock ? extractTextFromBlock(wwdBlock) : [];
+    const parsedItems = lines.length ? buildWhatWeDoItems(lines) : [];
+
+    return {
+      imageUrl: img,
+      items: parsedItems.length ? parsedItems : DEFAULT_ITEMS,
+    };
+  }, [apiData]);
+
   return (
     <section className="h-full bg-white flex flex-col md:flex-row py-10 px-6 md:px-14 overflow-hidden">
       <motion.div
@@ -17,14 +112,27 @@ export default function WhatWeDo() {
         viewport={{ once: true, amount: 0.3 }}
       >
         <div className="w-full max-w-[500px] aspect-square rounded-[20px] relative overflow-hidden">
-          <Image
-            src={WhatWeDoImg}
-            alt="What We Do"
-            fill
-            className="object-cover rounded-[20px]"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            priority
-          />
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt="What We Do"
+              className="object-cover rounded-[20px] w-full h-full"
+              loading="lazy"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src =
+                  (WhatWeDoImg as any).src || "/images/wwd.jpg";
+              }}
+            />
+          ) : (
+            <Image
+              src={WhatWeDoImg}
+              alt="What We Do"
+              fill
+              className="object-cover rounded-[20px]"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              priority
+            />
+          )}
         </div>
       </motion.div>
 
@@ -40,68 +148,14 @@ export default function WhatWeDo() {
             What We Do
           </h2>
 
-          {/* Item 1 */}
-          <div className="mt-6">
-            <h3 className="font-semibold text-[#0e372d] text-lg">
-              1. Educational Support for Pupils
-            </h3>
-            <p className="text-gray-600 mt-2">
-              Golden Height addresses the resource gap in rural schools by
-              equipping classrooms with solar-powered computer labs, libraries,
-              and digital content. We provide backpacks, stationery, and
-              teaching aids to ensure pupils are well-prepared, while also
-              upgrading classrooms and reading corners into safe, engaging
-              learning spaces. To enhance delivery, we train teachers in digital
-              and computer skills, nurturing creativity and problem-solving
-              among pupils.
-            </p>
-          </div>
-
-          {/* Item 2 */}
-          <div className="mt-6">
-            <h3 className="font-semibold text-[#0e372d] text-lg">
-              2. Partnerships with Schools, Communities & Donors
-            </h3>
-            <p className="text-gray-600 mt-2">
-              We collaborate with the Ghana Education Service, PTAs, and local
-              leaders to identify schools most in need. Our partnerships extend
-              to international donor agencies, NGOs, corporate sponsors, and
-              universities, ensuring interventions are well-resourced and
-              sustainable. Together, we align local initiatives with global
-              development goals, creating long-lasting impact.
-            </p>
-          </div>
-
-          {/* Item 3 */}
-          <div className="mt-6">
-            <h3 className="font-semibold text-[#0e372d] text-lg">
-              3. Women’s Vocational Training & Empowerment
-            </h3>
-            <p className="text-gray-600 mt-2">
-              We empower rural women with practical vocational skills in
-              soap-making, catering, tailoring, and beadwork, while also
-              providing training in financial literacy, bookkeeping, and digital
-              marketing. By supporting women-led cooperatives and enterprises,
-              we help reduce poverty, strengthen family stability, and foster
-              leadership in communities.
-            </p>
-          </div>
-
-          {/* Item 4 */}
-          <div className="mt-6">
-            <h3 className="font-semibold text-[#0e372d] text-lg">
-              4. Sustainable & Scalable Impact
-            </h3>
-            <p className="text-gray-600 mt-2">
-              Our model begins with three annual school donations, allowing for
-              measurable impact, and gradually scales toward monthly outreach
-              programs. By leveraging solar energy and community ownership, we
-              reinvest in libraries, computer labs, and women’s cooperatives,
-              creating a cycle of empowerment where children access quality
-              education, women achieve sustainable incomes, and entire
-              communities thrive.
-            </p>
-          </div>
+          {items.map((it, idx) => (
+            <div key={idx} className="mt-6">
+              <h3 className="font-semibold text-[#0e372d] text-lg">
+                {it.title}
+              </h3>
+              <p className="text-gray-600 mt-2">{it.body}</p>
+            </div>
+          ))}
         </div>
       </motion.div>
     </section>

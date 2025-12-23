@@ -1,10 +1,12 @@
 "use client";
 
-import FAQS from "@/app/components/FAQ/Faqs";
+import { useEffect, useState } from "react";
 import HeroText from "@/app/components/Hero-text/Hero-text";
 import Layout from "@/app/components/Layouts/AppLayout";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
+import { Linkedin } from "lucide-react";
 
 import PhoneImg from "../../../../public/icons/phone.svg";
 import ClockImg from "../../../../public/icons/clock.svg";
@@ -12,13 +14,122 @@ import MailImg from "../../../../public/icons/mail.svg";
 import Facebook from "../../../../public/icons/Facebook.svg";
 import X from "../../../../public/icons/X.svg";
 import Instagram from "../../../../public/icons/Instagram.svg";
-import ContactImg from "../../../../public/images/ContactImg.svg";
 import Tiktok from "../../../../public/icons/tiktok.png";
-import { Linkedin } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
+import ContactImg from "../../../../public/images/ContactImg.svg";
+
+type Faq = {
+  id: number;
+  question: string;
+  answer: string;
+};
+
+type ContactPageData = {
+  title: string;
+  description: string;
+  heading: string;
+  paragraph: string;
+  contact: {
+    address: string;
+    phone: string;
+    email: string;
+    workingHours: string;
+  };
+  faqs: Faq[];
+};
+
+const FALLBACK_DATA: ContactPageData = {
+  title: "Contact Us",
+  description:
+    "You are more than welcome to leave your contact info and we will be in touch shortly",
+  heading: "Unlocking Potential, Transforming Communities",
+  paragraph:
+    "Golden Height Foundation is more than a charity, it is a movement of empathy, hope and action. By supporting children and empowering women, we aim to build stronger families and brighter communities where everyone can rise beyond limits, toward golden heights.",
+  contact: {
+    address:
+      "De Rosetta Premises, Forecourt Valco Hall, University of Cape Coast, Cape Coast",
+    phone: "(+233) 55 685 3499",
+    email: "info@goldenheightfoundation.org",
+    workingHours: "Mon-Fri: 8:00am - 6:00pm",
+  },
+  faqs: [
+    {
+      id: 1,
+      question: "What charities can I give to?",
+      answer:
+        "You can give to a wide variety of registered charities including education, health, poverty alleviation, and environmental organizations.",
+    },
+    {
+      id: 2,
+      question: "How do I track my donations?",
+      answer:
+        "Once you donate, you will receive an email confirmation. You can also log into your account to view a full donation history.",
+    },
+    {
+      id: 3,
+      question: "Are my donations tax deductible?",
+      answer:
+        "Yes, all donations made through our platform are tax deductible, and you will receive a statement at the end of the year.",
+    },
+    {
+      id: 4,
+      question: "Can I set up recurring donations?",
+      answer:
+        "Absolutely! You can set up weekly, monthly, or yearly recurring donations, and manage them anytime from your account dashboard.",
+    },
+  ],
+};
+
+const FAQSInline = ({ faqs }: { faqs: Faq[] }) => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const toggleFaq = (index: number) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
+  return (
+    <section className="relative w-full">
+      {faqs.map((faq, index) => (
+        <div
+          key={faq.id}
+          className={`${
+            openIndex === index
+              ? "bg-[#F8F9FA] rounded-2xl p-6 md:p-8"
+              : "p-6 md:p-8"
+          } mb-4 transition-all`}
+        >
+          <div className="flex items-start gap-4">
+            <div className="flex-1">
+              <h3 className="text-xl text-[#0e372d] md:text-2xl font-semibold">
+                {faq.question}
+              </h3>
+              {openIndex === index && (
+                <p className="mt-3 text-neutral-600 leading-relaxed">
+                  {faq.answer}
+                </p>
+              )}
+            </div>
+            <button
+              aria-label="Toggle FAQ"
+              onClick={() => toggleFaq(index)}
+              className={`${
+                openIndex === index
+                  ? "shrink-0 h-9 w-9 rounded-full bg-[#C4A54A] text-white grid place-items-center transition"
+                  : "shrink-0 h-9 w-9 rounded-full border-2 text-black grid place-items-center transition"
+              }`}
+            >
+              {openIndex === index ? "−" : "+"}
+            </button>
+          </div>
+        </div>
+      ))}
+    </section>
+  );
+};
 
 export default function Contact() {
+  const [pageData, setPageData] = useState<ContactPageData>(FALLBACK_DATA);
+  const [contentError, setContentError] = useState(false);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -27,7 +138,6 @@ export default function Contact() {
     subject: "",
     message: "",
   });
-
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
@@ -86,7 +196,42 @@ export default function Contact() {
       setLoading(false);
     }
   };
-  
+
+  useEffect(() => {
+    const fetchPageData = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_API}/contact-page?populate[faq]=true&populate[heading]=true&populate[paragraph]=true&populate[contact]=true`
+        );
+        if (!res.ok) throw new Error("Failed to fetch");
+
+        const json = await res.json();
+        const data = json?.data;
+
+        setPageData({
+          title: data?.title ?? FALLBACK_DATA.title,
+          description: data?.description ?? FALLBACK_DATA.description,
+          heading: data?.heading?.title ?? FALLBACK_DATA.heading,
+          paragraph:
+            data?.paragraph?.content?.[0]?.children?.[0]?.text ??
+            FALLBACK_DATA.paragraph,
+          contact: {
+            address: data?.contact?.address ?? FALLBACK_DATA.contact.address,
+            phone: data?.contact?.phone ?? FALLBACK_DATA.contact.phone,
+            email: data?.contact?.email ?? FALLBACK_DATA.contact.email,
+            workingHours:
+              data?.contact?.workingHours ?? FALLBACK_DATA.contact.workingHours,
+          },
+          faqs: data?.faq ?? FALLBACK_DATA.faqs,
+        });
+      } catch (err) {
+        console.error("Failed to fetch contact page:", err);
+        setContentError(true);
+      }
+    };
+
+    fetchPageData();
+  }, []);
 
   return (
     <Layout>
@@ -97,8 +242,8 @@ export default function Contact() {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <HeroText
-            title="Contact Us"
-            description="You are more than welcome to leave your contact info and we will be in touch shortly"
+            title={pageData.title}
+            description={pageData.description}
             breadcrumb={[{ name: "Home", href: "/" }, { name: "Contact" }]}
           />
         </motion.div>
@@ -118,38 +263,33 @@ export default function Contact() {
             transition={{ duration: 0.7, ease: "easeOut" }}
           >
             <h3 className="text-white capitalize font-semibold text-3xl md:text-[40px] leading-tight">
-              Unlocking Potential, <br />
-              Transforming Communities
+              {pageData.heading}
             </h3>
             <p className="text-gray-400 mt-3 text-sm md:text-base leading-relaxed">
-              Golden Height Foundation is more than a charity, it is a movement
-              of empathy, hope and action. By supporting children and empowering
-              women, we aim to build stronger families and brighter communities
-              where everyone can rise beyond limits, toward golden heights.
+              {pageData.paragraph}
             </p>
 
             <p className="text-white font-medium mt-8 mb-4 text-sm md:text-base">
-              De Rosetta Premises, Forecourt Valco Hall, University of Cape
-              Coast, Cape Coast
+              {pageData.contact.address}
             </p>
 
             <div className="space-y-4">
               <div className="flex items-center gap-x-3">
                 <Image src={PhoneImg} alt="phone icon" />
                 <p className="text-white text-sm md:text-base">
-                  (+233) 55 685 3499
+                  {pageData.contact.phone}
                 </p>
               </div>
               <div className="flex items-center gap-x-3">
                 <Image src={MailImg} alt="mail icon" />
                 <p className="text-white text-sm md:text-base">
-                  info@goldenheightfoundation.org
+                  {pageData.contact.email}
                 </p>
               </div>
               <div className="flex items-center gap-x-3">
                 <Image src={ClockImg} alt="clock icon" />
                 <p className="text-white text-sm md:text-base">
-                  Mon-Fri: 8:00am - 6:00pm
+                  {pageData.contact.workingHours}
                 </p>
               </div>
             </div>
@@ -172,11 +312,7 @@ export default function Contact() {
               >
                 <Linkedin className="text-black w-3.5 h-3.5" />
               </Link>
-
-              <Link
-                href="https://x.com/Goldenheight_gh?t=LViynigxig2P7iVUDZc_tg&s=08"
-                target="_blank"
-              >
+              <Link href="https://x.com/Goldenheight_gh" target="_blank">
                 <Image
                   src={X}
                   alt="X Icon"
@@ -194,15 +330,11 @@ export default function Contact() {
                 />
               </Link>
               <Link
-                href="https://www.tiktok.com/@golden.height.fou?_t=ZM-9006aRS1mWq&_r=1"
+                href="https://www.tiktok.com/@golden.height.fou"
                 target="_blank"
                 className="bg-white w-6 h-6 flex items-center justify-center rounded-full opacity-50 hover:opacity-100 transition-all duration-100"
               >
-                <Image
-                  src={Tiktok}
-                  alt="Instagram Icon"
-                  className="w-3.5 h-3.5"
-                />
+                <Image src={Tiktok} alt="TikTok" className="w-3.5 h-3.5" />
               </Link>
             </div>
           </motion.div>
@@ -333,7 +465,7 @@ export default function Contact() {
         </motion.div>
 
         <motion.div
-          className="flex flex-col md:flex-row items-start gap-8 md:gap-x-10"
+          className="flex flex-col md:flex-row items-start gap-8 md:gap-x-10 mt-10"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -344,13 +476,15 @@ export default function Contact() {
               Frequently <br className="hidden md:block" /> Asked{" "}
               <br className="hidden md:block" /> Questions
             </h3>
-            <p className="text-black mt-3 text-base md:text-lg">
-              Lorem ipsum dolor sit amet.
-            </p>
+            {contentError && (
+              <p className="text-orange-500 mt-2 text-sm">
+                Showing cached content due to network issues.
+              </p>
+            )}
           </div>
 
           <div className="w-full md:w-[70%] flex-1 mt-2">
-            <FAQS />
+            <FAQSInline faqs={pageData.faqs} />
           </div>
         </motion.div>
       </div>

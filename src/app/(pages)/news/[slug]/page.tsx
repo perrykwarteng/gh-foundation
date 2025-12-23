@@ -1,14 +1,13 @@
-// app/(pages)/news/[slug]/page.tsx
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import Layout from "@/app/components/Layouts/AppLayout";
-import { BRAND, getNewsBySlug, formatDate, NEWS } from "../news-data";
 import { notFound } from "next/navigation";
 
-export function generateStaticParams() {
-  return NEWS.map(({ slug }) => ({ slug }));
-}
+import {
+  fetchNews,
+  formatDate,
+  getNewsBySlugFromList,
+} from "@/app/lib/news-content";
 
 export default async function NewsDetailPage({
   params,
@@ -16,12 +15,16 @@ export default async function NewsDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article = getNewsBySlug(slug);
+
+  const list = await fetchNews();
+  const article = getNewsBySlugFromList(list, slug);
 
   if (!article) {
     notFound();
     return null;
   }
+
+  const imageSrc = article.image || "/images/B1.svg";
 
   return (
     <Layout>
@@ -30,28 +33,28 @@ export default async function NewsDetailPage({
           <Link
             href="/news"
             className="inline-flex items-center gap-2 text-sm mb-6 hover:opacity-80"
-            style={{ color: BRAND.DEEP }}
+            style={{ color: "#0e372d" }}
           >
             <span>← Back</span>
           </Link>
 
           <h1
             className="text-3xl md:text-4xl font-bold leading-tight"
-            style={{ color: BRAND.DEEP }}
+            style={{ color: "#0e372d" }}
           >
             {article.title}
           </h1>
+
           <p className="mt-2 text-sm" style={{ color: "#3b4a45" }}>
             {formatDate(article.date)}
           </p>
 
           <div className="mt-6 overflow-hidden rounded-2xl shadow-sm bg-white">
-            <Image
-              src={article.image}
+            <img
+              src={imageSrc}
               alt={article.title}
-              className="w-full h-auto"
-              width={1200}
-              height={600}
+              className="w-full h-auto object-cover"
+              loading="lazy"
             />
           </div>
 

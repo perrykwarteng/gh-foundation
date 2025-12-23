@@ -1,52 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "@/app/components/Layouts/AppLayout";
 import { motion } from "framer-motion";
 import SingleProject from "@/app/components/Single-Project/SingleProject";
 import ProjectModal from "../../components/Modal/Modal";
-
-import Project1 from "../../../../public/images/project1.jpeg";
-import Project2 from "../../../../public/icons/projectImg2.svg";
-
-import { StaticImageData } from "next/image";
 import HeroText from "@/app/components/Hero-text/Hero-text";
 
-type Project = {
-  id: number;
-  image: StaticImageData;
-  title: string;
-  description: string;
-  goal: number;
-  raised: number;
-  donations: number;
-};
-
-const projectsData: Project[] = [
-  {
-    id: 1,
-    image: Project1,
-    title: "Donation to Schools",
-    description:
-      "Your contribution will put smiles on faces, light hope in young hearts, and provide the foundation for brighter futures.",
-    goal: 47000,
-    raised: 0,
-    donations: 0,
-  },
-  {
-    id: 2,
-    image: Project2,
-    title: "Education for Every Child",
-    description:
-      "Supporting schools with books, uniforms, and tuition for underprivileged children.",
-    goal: 0,
-    raised: 0,
-    donations: 0,
-  },
-];
+import {
+  fetchProjects,
+  PROJECTS_FALLBACK,
+  type Project,
+} from "@/app/lib/projects-content";
 
 export default function ProjectPage() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [projectsData, setProjectsData] =
+    useState<Project[]>(PROJECTS_FALLBACK);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const data = await fetchProjects(); 
+      if (mounted) setProjectsData(data);
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <Layout>

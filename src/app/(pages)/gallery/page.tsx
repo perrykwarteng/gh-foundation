@@ -4,7 +4,8 @@ import React, { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import Layout from "@/app/components/Layouts/AppLayout";
 import HeroText from "@/app/components/Hero-text/Hero-text";
-import { ImagessData, GalleryItem } from "./gallery-data";
+import type { GalleryItem } from "./gallery-data";
+import { fetchGalleryItems } from "@/app/lib/gallery-content";
 
 const ACCENT = "#c4a54a";
 const DEEP = "#0e372d";
@@ -13,13 +14,25 @@ const MasonryItem: React.FC<{ item: GalleryItem }> = ({ item }) => {
   return (
     <figure className="mb-4 break-inside-avoid rounded-2xl overflow-hidden shadow-sm bg-white">
       {item.type === "image" ? (
-        <Image
-          src={item.src}
-          alt={item.alt ?? "Gallery image"}
-          className="w-full h-auto object-cover"
-          width={600}
-          height={400}
-        />
+        item.src.startsWith("http") ? (
+          <img
+            src={item.src}
+            alt={item.alt ?? "Gallery image"}
+            className="w-full h-auto object-cover"
+            loading="lazy"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src = "/images/g1.svg";
+            }}
+          />
+        ) : (
+          <Image
+            src={item.src}
+            alt={item.alt ?? "Gallery image"}
+            className="w-full h-auto object-cover"
+            width={600}
+            height={400}
+          />
+        )
       ) : (
         <video
           controls
@@ -57,14 +70,29 @@ export default function Gallery() {
   const [filter, setFilter] = useState<"all" | "image" | "video">("all");
   const [visible, setVisible] = useState(6);
 
+  const [items, setItems] = useState<GalleryItem[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      const data = await fetchGalleryItems(); 
+      if (mounted) setItems(data);
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   useEffect(() => {
     setVisible(10);
   }, [filter]);
 
   const filtered = useMemo(() => {
-    if (filter === "all") return ImagessData;
-    return ImagessData.filter((m) => m.type === filter);
-  }, [filter]);
+    if (filter === "all") return items;
+    return items.filter((m) => m.type === filter);
+  }, [filter, items]);
 
   const toShow = filtered.slice(0, visible);
   const canLoadMore = visible < filtered.length;

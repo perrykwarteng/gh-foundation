@@ -1,11 +1,32 @@
 "use client";
+
 import SingleBlog from "@/app/components/SingleBlog/SingleBlog";
 import Layout from "@/app/components/Layouts/AppLayout";
-import { BRAND, formatDate, NEWS } from "./news-data";
 import HeroText from "@/app/components/Hero-text/Hero-text";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+
+import {
+  fetchNews,
+  formatDate,
+  NEWS_FALLBACK,
+  type NewsItem,
+} from "@/app/lib/news-content";
 
 export default function News() {
+  const [news, setNews] = useState<NewsItem[]>(NEWS_FALLBACK);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const data = await fetchNews();
+      if (mounted) setNews(data);
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <Layout>
       <div className="py-10 px-6 md:px-14 bg-white">
@@ -36,7 +57,7 @@ export default function News() {
               },
             }}
           >
-            {NEWS.map((n) => (
+            {news.map((n) => (
               <motion.div
                 key={n.slug}
                 variants={{
@@ -53,9 +74,10 @@ export default function News() {
                   description={n.description}
                   link={`/news/${n.slug}`}
                 />
+
                 <div
                   className="mt-2 h-0.5 w-0 group-hover:w-full transition-all"
-                  style={{ background: BRAND.ACCENT }}
+                  style={{ background: "#c4a54a" }}
                 />
               </motion.div>
             ))}

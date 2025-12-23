@@ -1,15 +1,14 @@
+"use client";
+
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 
-import Calendar from "../../../../public/icons/calendar.svg";
-import Arrow from "../../../../public/icons/arrow-right.svg";
-
 type SingleBlogProps = {
-  image: StaticImageData;
+  image: StaticImageData | string; 
   date: string;
   title: string;
   description: string;
-  link?: string;
+  link: string;
 };
 
 export default function SingleBlog({
@@ -17,39 +16,36 @@ export default function SingleBlog({
   date,
   title,
   description,
-  link = "#",
+  link,
 }: SingleBlogProps) {
+  const isString = typeof image === "string";
+
   return (
-    <div className="Card h-full max-w-[416px] rounded-[10px] bg-white shadow-sm">
-      <div className="w-full max-h-[280px]">
-        <Image
-          className="rounded-t-[10px] w-full h-full object-cover"
-          src={image}
-          alt={title}
-        />
-      </div>
+    <Link href={link} className="group block">
+      <div className="rounded-2xl overflow-hidden shadow-sm bg-white">
+        {isString ? (
+          <img
+            src={image || "/images/B1.svg"}
+            alt={title}
+            className="w-full h-auto object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <Image
+            src={image}
+            alt={title}
+            className="w-full h-auto object-cover"
+            width={1200}
+            height={600}
+          />
+        )}
 
-      <div className="max-h-[360px] p-3.5 md:p-5">
-        <div className="flex gap-1 items-center">
-          <Image src={Calendar} alt="calendar icon" />
-          <p className="text-gray-500 text-[13px]">{date}</p>
-        </div>
-
-        <h3 className="text-[17px] text-[#0e372d] md:text-[20px] font-bold">
-          {title}
-        </h3>
-
-        <p className="text-gray-500 mt-2">{description}</p>
-
-        <div className="w-full mt-3.5">
-          <Link
-            href={link}
-            className="flex gap-1 items-center cursor-pointer transition-all duration-150 text-gray-600 hover:text-[#0e372d]"
-          >
-            Read more <Image src={Arrow} alt="arrow icon" />
-          </Link>
+        <div className="p-4">
+          <p className="text-xs text-gray-500">{date}</p>
+          <h3 className="mt-2 font-bold text-[#0e372d]">{title}</h3>
+          <p className="mt-2 text-sm text-gray-500">{description}</p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

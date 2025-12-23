@@ -3,19 +3,118 @@
 import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
+
+type StrapiImage = {
+  url?: string;
+  formats?: {
+    large?: { url?: string };
+    medium?: { url?: string };
+    small?: { url?: string };
+    thumbnail?: { url?: string };
+  };
+};
+
+type HomepageResponse = {
+  data?: {
+    blocks?: Array<any>;
+  };
+};
+
+const API_BASE = process.env.NEXT_PUBLIC_BASE_API || "";
+
+const ASSET_BASE = API_BASE.replace(/\/api\/?$/, "");
+
+const API_PATH =
+  "/homepage?populate[blocks][on][blocks.hero-section][populate][images]=true&populate[blocks][on][blocks.info-block][populate][image]=true&populate[testimonials]=true&populate[partners][populate][logo]=true";
+
+function toAbsoluteAssetUrl(maybeRelative?: string) {
+  if (!maybeRelative) return "";
+  if (maybeRelative.startsWith("http")) return maybeRelative;
+  if (!ASSET_BASE) return maybeRelative;
+  return `${ASSET_BASE}${maybeRelative}`;
+}
+
+function pickBestImageUrl(img?: StrapiImage) {
+  const u =
+    img?.formats?.large?.url ||
+    img?.formats?.medium?.url ||
+    img?.formats?.small?.url ||
+    img?.formats?.thumbnail?.url ||
+    img?.url ||
+    "";
+  return toAbsoluteAssetUrl(u);
+}
 
 export const Hero = () => {
   const [sliderRef, instanceRef] = useKeenSlider({
     loop: true,
     drag: true,
     mode: "free-snap",
-    slides: {
-      perView: 1,
-      spacing: 0,
-    },
+    slides: { perView: 1, spacing: 0 },
   });
+
+  const fallback = useMemo(
+    () => ({
+      heading: "Unlocking Potential, Transforming Communities",
+      description:
+        "At Golden Height Foundation, we believe that every individual has untapped potential waiting to be unlocked. Through education, empowerment, and collaboration, we provide the tools and support needed to transform lives. When individuals grow and succeed, entire communities thrive. Our mission is simple: by empowering one person at a time, we create lasting, meaningful change that ripples through generations. Together, we are shaping a brighter, more inclusive future for all.",
+      slides: [
+        { img: "/images/Slide1.jpg" },
+        { img: "/images/Slide2.jpg" },
+        { img: "/images/Slide3.jpg" },
+        { img: "/images/Slide4.jpg" },
+      ],
+    }),
+    []
+  );
+
+  const [content, setContent] = useState(fallback);
+
+  useEffect(() => {
+    const ctrl = new AbortController();
+
+    (async () => {
+      try {
+        const res = await fetch(`${API_BASE}${API_PATH}`, {
+          cache: "no-store",
+          signal: ctrl.signal,
+        });
+
+        if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+
+        const json = (await res.json()) as HomepageResponse;
+
+        const blocks = json?.data?.blocks ?? [];
+        const hero = blocks.find(
+          (b: any) => b?.__component === "blocks.hero-section"
+        );
+
+        const apiHeading = hero?.heading?.trim();
+        const apiDescription = hero?.description?.trim();
+
+        const apiImages: StrapiImage[] = Array.isArray(hero?.images)
+          ? hero.images
+          : [];
+
+        const apiSlides = apiImages
+          .map((img) => pickBestImageUrl(img))
+          .filter(Boolean)
+          .map((url) => ({ img: url }));
+
+        setContent({
+          heading: apiHeading || fallback.heading,
+          description: apiDescription || fallback.description,
+          slides: apiSlides.length ? apiSlides : fallback.slides,
+        });
+      } catch {
+        setContent(fallback);
+      }
+    })();
+
+    return () => ctrl.abort();
+  }, [fallback]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -23,13 +122,6 @@ export const Hero = () => {
     }, 5000);
     return () => clearInterval(interval);
   }, [instanceRef]);
-
-  const slides = [
-    { img: "/images/Slide1.jpg" },
-    { img: "/images/Slide2.jpg" },
-    { img: "/images/Slide3.jpg" },
-    { img: "/images/Slide4.jpg" },
-  ];
 
   const fadeUp = {
     hidden: { opacity: 0, y: 40 },
@@ -43,7 +135,7 @@ export const Hero = () => {
   return (
     <div className="relative w-full h-[65vh] sm:h-[85vh] md:h-[90vh] lg:h-[100vh] overflow-hidden">
       <div ref={sliderRef} className="keen-slider w-full h-full">
-        {slides.map((slide, index) => (
+        {content.slides.map((slide, index) => (
           <div
             key={index}
             className="keen-slider__slide relative w-full h-full"
@@ -69,7 +161,14 @@ export const Hero = () => {
           animate="visible"
           custom={0.2}
         >
-          Unlocking Potential, <br /> Transforming Communities
+          {content.heading.split(",").length > 1 ? (
+            <>
+              {content.heading.split(",")[0]}, <br />
+              {content.heading.split(",").slice(1).join(",").trim()}
+            </>
+          ) : (
+            content.heading
+          )}
         </motion.h1>
 
         <motion.p
@@ -79,51 +178,8 @@ export const Hero = () => {
           animate="visible"
           custom={0.4}
         >
-          At Golden Height Foundation, we believe that every individual has
-          untapped potential waiting to be unlocked. Through education,
-          empowerment, and collaboration, we provide the tools and support
-          needed to transform lives. When individuals grow and succeed, entire
-          communities thrive. Our mission is simple: by empowering one person at
-          a time, we create lasting, meaningful change that ripples through
-          generations. Together, we are shaping a brighter, more inclusive
-          future for all.
+          {content.description}
         </motion.p>
-
-        <motion.div
-          className="flex flex-col sm:flex-row sm:items-center gap-5 mt-6"
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={0.6}
-        >
-          {/* <div>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
-              <p className="text-[#c4a54a] text-2xl sm:text-3xl font-semibold">
-                $1 284 528
-              </p>
-              <p className="text-gray-300 text-sm sm:text-base">Donation</p>
-            </div>
-          </div>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
-            <p className="text-[#c4a54a] text-2xl sm:text-3xl font-semibold">
-              12 460
-            </p>
-            <p className="text-gray-300 text-sm sm:text-base">People Helped</p>
-          </div> */}
-        </motion.div>
-
-        <motion.div
-          className="flex flex-wrap items-center gap-3 mt-6"
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={0.8}
-        >
-          {/* <Image src={Spon1} alt="1" className="w-16 sm:w-20" />
-          <Image src={Spon2} alt="2" className="w-16 sm:w-20" />
-          <Image src={Spon1} alt="3" className="w-16 sm:w-20" />
-          <Image src={Spon2} alt="4" className="w-16 sm:w-20" /> */}
-        </motion.div>
       </div>
     </div>
   );
