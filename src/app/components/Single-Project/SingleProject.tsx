@@ -24,25 +24,22 @@ export default function SingleProject({
 
   return (
     <div className="Card max-w-[416px] bg-white">
-      <div className="Image w-full max:h-[280px]">
+      <div className="Image w-full h-[280px] relative overflow-hidden">
         {isRemote ? (
-          <img
+          <Image
             src={image as string}
             alt={title}
-            className="rounded-t-[10px] w-full h-auto"
-            loading="lazy"
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src =
-                "/images/project1.jpeg";
-            }}
+            fill
+            className="rounded-t-[10px] object-cover"
+            sizes="(max-width: 768px) 100vw, 416px"
           />
         ) : (
           <Image
-            className="rounded-t-[10px] w-full h-auto"
             src={image}
             alt={title}
-            width={900} 
-            height={600}
+            fill
+            className="rounded-t-[10px] object-cover"
+            sizes="(max-width: 768px) 100vw, 416px"
           />
         )}
       </div>

@@ -16,14 +16,28 @@ type StrapiImage = {
   };
 };
 
+type HeroBlock = {
+  __component?: "blocks.hero-section" | string;
+  heading?: string;
+  description?: string;
+  images?: StrapiImage[];
+};
+
 type HomepageResponse = {
   data?: {
-    blocks?: Array<any>;
+    blocks?: HeroBlock[];
   };
 };
 
-const API_BASE = process.env.NEXT_PUBLIC_BASE_API || "";
+type Slide = { img: string };
 
+type HeroContent = {
+  heading: string;
+  description: string;
+  slides: Slide[];
+};
+
+const API_BASE = process.env.NEXT_PUBLIC_BASE_API || "";
 const ASSET_BASE = API_BASE.replace(/\/api\/?$/, "");
 
 const API_PATH =
@@ -55,7 +69,7 @@ export const Hero = () => {
     slides: { perView: 1, spacing: 0 },
   });
 
-  const fallback = useMemo(
+  const fallback = useMemo<HeroContent>(
     () => ({
       heading: "Unlocking Potential, Transforming Communities",
       description:
@@ -70,7 +84,7 @@ export const Hero = () => {
     []
   );
 
-  const [content, setContent] = useState(fallback);
+  const [content, setContent] = useState<HeroContent>(fallback);
 
   useEffect(() => {
     const ctrl = new AbortController();
@@ -88,11 +102,11 @@ export const Hero = () => {
 
         const blocks = json?.data?.blocks ?? [];
         const hero = blocks.find(
-          (b: any) => b?.__component === "blocks.hero-section"
+          (b) => b?.__component === "blocks.hero-section"
         );
 
-        const apiHeading = hero?.heading?.trim();
-        const apiDescription = hero?.description?.trim();
+        const apiHeading = hero?.heading?.trim() || "";
+        const apiDescription = hero?.description?.trim() || "";
 
         const apiImages: StrapiImage[] = Array.isArray(hero?.images)
           ? hero.images
@@ -100,7 +114,7 @@ export const Hero = () => {
 
         const apiSlides = apiImages
           .map((img) => pickBestImageUrl(img))
-          .filter(Boolean)
+          .filter((url): url is string => Boolean(url))
           .map((url) => ({ img: url }));
 
         setContent({
@@ -108,7 +122,9 @@ export const Hero = () => {
           description: apiDescription || fallback.description,
           slides: apiSlides.length ? apiSlides : fallback.slides,
         });
-      } catch {
+      } catch (err) {
+        // Don't override state on abort
+        if (err instanceof DOMException && err.name === "AbortError") return;
         setContent(fallback);
       }
     })();
@@ -120,6 +136,7 @@ export const Hero = () => {
     const interval = setInterval(() => {
       instanceRef.current?.next();
     }, 5000);
+
     return () => clearInterval(interval);
   }, [instanceRef]);
 
@@ -131,6 +148,17 @@ export const Hero = () => {
       transition: { duration: 0.8, delay },
     }),
   };
+
+  const headingParts = useMemo(() => {
+    const raw = content.heading || "";
+    const parts = raw.split(",");
+    return {
+      parts,
+      hasComma: parts.length > 1,
+      first: parts[0] ?? "",
+      rest: parts.slice(1).join(",").trim(),
+    };
+  }, [content.heading]);
 
   return (
     <div className="relative w-full h-[65vh] sm:h-[85vh] md:h-[90vh] lg:h-[100vh] overflow-hidden">
@@ -161,10 +189,10 @@ export const Hero = () => {
           animate="visible"
           custom={0.2}
         >
-          {content.heading.split(",").length > 1 ? (
+          {headingParts.hasComma ? (
             <>
-              {content.heading.split(",")[0]}, <br />
-              {content.heading.split(",").slice(1).join(",").trim()}
+              {headingParts.first}, <br />
+              {headingParts.rest}
             </>
           ) : (
             content.heading

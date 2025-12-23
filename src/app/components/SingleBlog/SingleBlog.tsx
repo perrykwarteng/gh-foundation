@@ -1,10 +1,11 @@
 "use client";
 
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-type SingleBlogProps = {
-  image: StaticImageData | string; 
+type Props = {
+  image: string;
   date: string;
   title: string;
   description: string;
@@ -17,35 +18,43 @@ export default function SingleBlog({
   title,
   description,
   link,
-}: SingleBlogProps) {
-  const isString = typeof image === "string";
+}: Props) {
+  const [src, setSrc] = useState(image || "/images/B1.svg");
+
+  useEffect(() => {
+    setSrc(image || "/images/B1.svg");
+  }, [image]);
 
   return (
     <Link href={link} className="group block">
-      <div className="rounded-2xl overflow-hidden shadow-sm bg-white">
-        {isString ? (
-          <img
-            src={image || "/images/B1.svg"}
-            alt={title}
-            className="w-full h-auto object-cover"
-            loading="lazy"
-          />
-        ) : (
+      <article className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
+        {/* IMAGE */}
+        <div className="relative w-full aspect-[4/3] bg-gray-100">
           <Image
-            src={image}
+            src={src}
             alt={title}
-            className="w-full h-auto object-cover"
-            width={1200}
-            height={600}
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 100vw,
+                   (max-width: 1024px) 50vw,
+                   25vw"
+            onError={() => setSrc("/images/B1.svg")}
           />
-        )}
+        </div>
 
+        {/* CONTENT */}
         <div className="p-4">
           <p className="text-xs text-gray-500">{date}</p>
-          <h3 className="mt-2 font-bold text-[#0e372d]">{title}</h3>
-          <p className="mt-2 text-sm text-gray-500">{description}</p>
+
+          <h3 className="mt-2 text-[#0e372d] font-semibold text-sm line-clamp-2">
+            {title}
+          </h3>
+
+          <p className="mt-2 text-sm text-gray-600 line-clamp-3">
+            {description}
+          </p>
         </div>
-      </div>
+      </article>
     </Link>
   );
 }

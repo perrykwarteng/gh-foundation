@@ -4,8 +4,43 @@ export type StrapiImage = {
   caption?: string | null;
   width?: number;
   height?: number;
-  formats?: Record<string, { url: string; width: number; height: number }>;
+
+  // ✅ known keys + allow extra format keys
+  formats?: {
+    large?: { url?: string; width?: number; height?: number };
+    medium?: { url?: string; width?: number; height?: number };
+    small?: { url?: string; width?: number; height?: number };
+    thumbnail?: { url?: string; width?: number; height?: number };
+    [key: string]:
+      | { url?: string; width?: number; height?: number }
+      | undefined;
+  };
 };
+
+type RichTextChild = { text?: string };
+type RichTextParagraphNode = { children?: RichTextChild[] };
+
+type HeadingBlock = {
+  __component?: "blocks.heading";
+  title?: string;
+};
+
+type ParagraphBlock = {
+  __component?: "blocks.paragraph" | "blocks.paragraph-with-image";
+  content?: RichTextParagraphNode[];
+};
+
+type LinkBlock = {
+  __component?: "elements.link";
+  text?: string;
+  href?: string;
+};
+
+type ContentBlock =
+  | HeadingBlock
+  | ParagraphBlock
+  | LinkBlock
+  | { __component?: string };
 
 export type NewsApiItem = {
   id?: number;
@@ -15,12 +50,14 @@ export type NewsApiItem = {
   publishedAt?: string;
   createdAt?: string;
   coverImage?: StrapiImage | null;
-  content?: any[];
+
+  // ✅ safer than any[]
+  content?: ContentBlock[] | unknown;
 };
 
 export type NewsApiResponse = {
   data?: NewsApiItem[];
-  meta?: any;
+  meta?: unknown;
 };
 
 export type NewsItem = {
@@ -28,7 +65,7 @@ export type NewsItem = {
   title: string;
   date: string;
   description: string;
-  image: string; 
+  image: string;
   content: string;
 };
 
@@ -85,41 +122,47 @@ function getCached(): NewsApiResponse | null {
   return safeJsonParse<NewsApiResponse>(localStorage.getItem(CACHE_KEY));
 }
 
-function setCached(data: NewsApiResponse) {
+function setCached(data: NewsApiResponse): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(CACHE_KEY, JSON.stringify(data));
   } catch {
+    // keep silent (same behavior)
   }
 }
 
 function pickBestImageUrl(img?: StrapiImage | null) {
   if (!img) return "";
-  const fmts = img.formats || {};
+  const fmts = img.formats;
   const preferred =
-    fmts.medium?.url || fmts.small?.url || fmts.large?.url || img.url || "";
-  return strapiAssetUrl(preferred); 
+    fmts?.medium?.url ||
+    fmts?.small?.url ||
+    fmts?.large?.url ||
+    fmts?.thumbnail?.url ||
+    img.url ||
+    "";
+  return strapiAssetUrl(preferred);
 }
 
-function extractTextFromBlocks(blocks: any[]): string {
+function extractTextFromBlocks(blocks: unknown): string {
   if (!Array.isArray(blocks)) return "";
 
   const out: string[] = [];
 
-  for (const b of blocks) {
+  for (const b of blocks as ContentBlock[]) {
     const type = b?.__component;
 
     if (type === "blocks.heading") {
-      const t = (b?.title || "").trim();
+      const t = (b as HeadingBlock)?.title?.trim() || "";
       if (t) out.push(`\n### ${t}\n`);
     }
 
     if (type === "blocks.paragraph" || type === "blocks.paragraph-with-image") {
-      const nodes = b?.content ?? [];
+      const nodes = (b as ParagraphBlock)?.content ?? [];
       const txt = nodes
-        .map((p: any) =>
+        .map((p) =>
           (p?.children ?? [])
-            .map((c: any) => (c?.text ? String(c.text) : ""))
+            .map((c) => (c?.text ? String(c.text) : ""))
             .join("")
         )
         .join("\n")
@@ -128,8 +171,9 @@ function extractTextFromBlocks(blocks: any[]): string {
     }
 
     if (type === "elements.link") {
-      const text = (b?.text || "").trim();
-      const href = (b?.href || "").trim();
+      const link = b as LinkBlock;
+      const text = (link?.text || "").trim();
+      const href = (link?.href || "").trim();
       if (href) out.push(text ? `${text}: ${href}` : href);
     }
   }
@@ -159,12 +203,10 @@ export function mapNewsApiToNewsItems(json: NewsApiResponse): NewsItem[] {
 
       const date =
         String(n.publishedAt || n.createdAt || "").slice(0, 10) || "";
-
       const description = (n.description || "").trim() || "Latest update.";
-
       const image = pickBestImageUrl(n.coverImage) || "/images/B1.svg";
 
-      const content = extractTextFromBlocks(n.content || []) || description;
+      const content = extractTextFromBlocks(n.content) || description;
 
       return { slug, title, date, description, image, content };
     });
@@ -176,7 +218,7 @@ export async function fetchNews(): Promise<NewsItem[]> {
 
   try {
     const endpoint =
-      "/api/news-pages?populate[coverImage][populate]=*&populate[content][on][blocks.heading][populate]=*&populate[content][on][blocks.paragraph]=*&populate[content][on][blocks.paragraph-with-image][populate]=*&populate[content][on][elements.link]=*";
+      "/news-pages?populate[coverImage][populate]=*&populate[content][on][blocks.heading][populate]=*&populate[content][on][blocks.paragraph]=*&populate[content][on][blocks.paragraph-with-image][populate]=*&populate[content][on][elements.link]=*";
 
     const url = joinApi(endpoint);
 

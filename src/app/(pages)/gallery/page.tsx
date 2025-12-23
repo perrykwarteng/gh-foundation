@@ -11,28 +11,32 @@ const ACCENT = "#c4a54a";
 const DEEP = "#0e372d";
 
 const MasonryItem: React.FC<{ item: GalleryItem }> = ({ item }) => {
+  const isRemote = item.type === "image" && item.src.startsWith("http");
+
+  const [src, setSrc] = useState<string>(item.src);
+
+  useEffect(() => {
+    setSrc(item.src);
+  }, [item.src]);
+
   return (
     <figure className="mb-4 break-inside-avoid rounded-2xl overflow-hidden shadow-sm bg-white">
       {item.type === "image" ? (
-        item.src.startsWith("http") ? (
-          <img
-            src={item.src}
-            alt={item.alt ?? "Gallery image"}
-            className="w-full h-auto object-cover"
-            loading="lazy"
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src = "/images/g1.svg";
-            }}
-          />
-        ) : (
-          <Image
-            src={item.src}
-            alt={item.alt ?? "Gallery image"}
-            className="w-full h-auto object-cover"
-            width={600}
-            height={400}
-          />
-        )
+        <div className="relative w-full">
+          <div className="relative w-full aspect-[4/3]">
+            <Image
+              src={src}
+              alt={item.alt ?? "Gallery image"}
+              fill
+              className="object-cover"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              unoptimized={isRemote}
+              onError={() => {
+                setSrc("/images/g1.svg");
+              }}
+            />
+          </div>
+        </div>
       ) : (
         <video
           controls
@@ -69,15 +73,18 @@ const FilterPill: React.FC<{
 export default function Gallery() {
   const [filter, setFilter] = useState<"all" | "image" | "video">("all");
   const [visible, setVisible] = useState(6);
-
   const [items, setItems] = useState<GalleryItem[]>([]);
 
   useEffect(() => {
     let mounted = true;
 
     (async () => {
-      const data = await fetchGalleryItems(); 
-      if (mounted) setItems(data);
+      try {
+        const data = await fetchGalleryItems();
+        if (mounted) setItems(data);
+      } catch {
+        if (mounted) setItems([]);
+      }
     })();
 
     return () => {

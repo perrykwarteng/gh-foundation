@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Layout from "@/app/components/Layouts/AppLayout";
 import { notFound } from "next/navigation";
 
@@ -50,11 +51,14 @@ export default async function NewsDetailPage({
           </p>
 
           <div className="mt-6 overflow-hidden rounded-2xl shadow-sm bg-white">
-            <img
+            <Image
               src={imageSrc}
               alt={article.title}
               className="w-full h-auto object-cover"
               loading="lazy"
+              width={1200}
+              height={700}
+              sizes="(max-width: 768px) 100vw, 768px"
             />
           </div>
 

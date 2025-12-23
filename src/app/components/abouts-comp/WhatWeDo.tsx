@@ -14,20 +14,32 @@ import {
 
 type Item = { title: string; body: string };
 
+type RichTextChild = { text?: string };
+
+type RichTextBlock = {
+  content?: {
+    children?: RichTextChild[];
+  }[];
+};
+
+type WhatWeDoBlock = {
+  id?: number;
+  image?: { url?: string };
+  content?: RichTextBlock["content"];
+};
+
 function pickBestImageUrl(imageUrl?: string) {
   const u = strapiUrl(imageUrl);
   return u && typeof u === "string" ? u : "";
 }
 
-function extractTextFromBlock(block: any): string[] {
+function extractTextFromBlock(block?: RichTextBlock): string[] {
   const nodes = block?.content ?? [];
   return nodes
-    .map((p: any) =>
-      (p?.children ?? [])
-        .map((c: any) => (c?.text ? String(c.text) : ""))
-        .join("")
+    .map((p) =>
+      (p?.children ?? []).map((c) => (c?.text ? String(c.text) : "")).join("")
     )
-    .map((t: string) => t.trim())
+    .map((t) => t.trim())
     .filter(Boolean);
 }
 
@@ -35,16 +47,15 @@ function buildWhatWeDoItems(lines: string[]): Item[] {
   const items: Item[] = [];
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-
     const isHeading = /^\d+\.\s+/.test(line);
     if (!isHeading) continue;
 
     const title = line;
     const body =
       lines[i + 1] && !/^\d+\.\s+/.test(lines[i + 1]) ? lines[i + 1] : "";
+
     items.push({ title, body });
   }
-
   return items;
 }
 
@@ -70,6 +81,9 @@ const DEFAULT_ITEMS: Item[] = [
 export default function WhatWeDo() {
   const [apiData, setApiData] = useState<AboutApiResponse | null>(null);
 
+  // ✅ image fallback state (reliable for next/image)
+  const [imgSrc, setImgSrc] = useState<string>("");
+
   useEffect(() => {
     let mounted = true;
 
@@ -88,8 +102,8 @@ export default function WhatWeDo() {
   }, []);
 
   const { imageUrl, items } = useMemo(() => {
-    const blocks = apiData?.data?.content ?? [];
-    const wwdBlock = blocks.find((b: any) => b?.id === 5);
+    const blocks = (apiData?.data?.content ?? []) as WhatWeDoBlock[];
+    const wwdBlock = blocks.find((b) => b?.id === 5);
 
     const img = pickBestImageUrl(wwdBlock?.image?.url);
 
@@ -102,6 +116,11 @@ export default function WhatWeDo() {
     };
   }, [apiData]);
 
+  // ✅ keep imgSrc in sync with API URL
+  useEffect(() => {
+    setImgSrc(imageUrl || "");
+  }, [imageUrl]);
+
   return (
     <section className="h-full bg-white flex flex-col md:flex-row py-10 px-6 md:px-14 overflow-hidden">
       <motion.div
@@ -112,15 +131,17 @@ export default function WhatWeDo() {
         viewport={{ once: true, amount: 0.3 }}
       >
         <div className="w-full max-w-[500px] aspect-square rounded-[20px] relative overflow-hidden">
-          {imageUrl ? (
-            <img
-              src={imageUrl}
+          {imgSrc ? (
+            <Image
+              src={imgSrc}
               alt="What We Do"
-              className="object-cover rounded-[20px] w-full h-full"
-              loading="lazy"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).src =
-                  (WhatWeDoImg as any).src || "/images/wwd.jpg";
+              fill
+              className="object-cover rounded-[20px]"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              onError={() => {
+                setImgSrc(
+                  (WhatWeDoImg as { src: string }).src || "/images/wwd.jpg"
+                );
               }}
             />
           ) : (

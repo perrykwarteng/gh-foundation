@@ -2,8 +2,20 @@ export type StrapiImage = {
   url?: string;
   alternativeText?: string | null;
   caption?: string | null;
-  formats?: Record<string, { url: string; width: number; height: number }>;
+
+  formats?: {
+    large?: { url?: string; width?: number; height?: number };
+    medium?: { url?: string; width?: number; height?: number };
+    small?: { url?: string; width?: number; height?: number };
+    thumbnail?: { url?: string; width?: number; height?: number };
+    [key: string]:
+      | { url?: string; width?: number; height?: number }
+      | undefined;
+  };
 };
+
+type RichTextChild = { text?: string };
+type RichTextNode = { type?: string; children?: RichTextChild[] };
 
 export type ProjectApiItem = {
   id?: number;
@@ -18,14 +30,14 @@ export type ProjectApiItem = {
     __component?: string;
     id?: number;
     text?: string;
-    content?: Array<{ type?: string; children?: Array<{ text?: string }> }>;
-    image?: StrapiImage;
+    content?: RichTextNode[];
+    image?: StrapiImage | null;
   }>;
 };
 
 export type ProjectsApiResponse = {
   data?: ProjectApiItem[];
-  meta?: any;
+  meta?: unknown;
 };
 
 export type Project = {
@@ -40,18 +52,47 @@ export type Project = {
 
 const CACHE_KEY = "projects_page_cache_v1";
 
-function getBaseApi() {
+function getBaseApiRaw() {
   return (process.env.NEXT_PUBLIC_BASE_API || "").trim().replace(/\/$/, "");
 }
 
-function apiUrl(path?: string) {
+function getApiBase() {
+  return getBaseApiRaw();
+}
+
+function getOriginBase() {
+  const base = getBaseApiRaw();
+  return base.endsWith("/api") ? base.slice(0, -4) : base;
+}
+
+function joinApi(endpointPath: string) {
+  const apiBase = getApiBase();
+  if (!apiBase) return endpointPath;
+
+  const hasApiSuffix = apiBase.endsWith("/api");
+  const endpointHasApiPrefix = endpointPath.startsWith("/api/");
+
+  if (hasApiSuffix && endpointHasApiPrefix) {
+    return `${apiBase}${endpointPath.replace("/api", "")}`;
+  }
+
+  return `${apiBase}${endpointPath}`;
+}
+
+export function strapiAssetUrl(path?: string) {
   if (!path) return "";
   if (path.startsWith("http://") || path.startsWith("https://")) return path;
 
-  const base = getBaseApi();
-  if (!base) return path;
+  const normalized = path.startsWith("/api/uploads/")
+    ? path.replace("/api", "")
+    : path;
 
-  return path.startsWith("/") ? `${base}${path}` : `${base}/${path}`;
+  const origin = getOriginBase();
+  if (!origin) return normalized;
+
+  return normalized.startsWith("/")
+    ? `${origin}${normalized}`
+    : `${origin}/${normalized}`;
 }
 
 function safeJsonParse<T>(value: string | null): T | null {
@@ -68,29 +109,38 @@ function getCached(): ProjectsApiResponse | null {
   return safeJsonParse<ProjectsApiResponse>(localStorage.getItem(CACHE_KEY));
 }
 
-function setCached(data: ProjectsApiResponse) {
+function setCached(data: ProjectsApiResponse): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-  } catch {
-  }
+  } catch {}
 }
 
 function pickBestImageUrl(img?: StrapiImage | null) {
   if (!img) return "";
-  const fmts = img.formats || {};
+  const fmts = img.formats;
+
   const preferred =
-    fmts.medium?.url || fmts.small?.url || fmts.large?.url || img.url || "";
-  return apiUrl(preferred);
+    fmts?.large?.url ||
+    fmts?.medium?.url ||
+    fmts?.small?.url ||
+    fmts?.thumbnail?.url ||
+    img.url ||
+    "";
+
+  return strapiAssetUrl(preferred);
 }
 
-function extractFirstTextFromContent(content: any): string {
-  const nodes = content?.content ?? [];
+type ParagraphBlock = {
+  __component?: string;
+  content?: RichTextNode[];
+};
+
+function extractFirstTextFromContent(block?: ParagraphBlock | null): string {
+  const nodes = block?.content ?? [];
   const joined = nodes
-    .map((p: any) =>
-      (p?.children ?? [])
-        .map((c: any) => (c?.text ? String(c.text) : ""))
-        .join("")
+    .map((p) =>
+      (p?.children ?? []).map((c) => (c?.text ? String(c.text) : "")).join("")
     )
     .join("\n")
     .trim();
@@ -100,10 +150,13 @@ function extractFirstTextFromContent(content: any): string {
 
 export function mapProjectsApiToProjects(json: ProjectsApiResponse): Project[] {
   const arr = json?.data ?? [];
-  const mapped: Project[] = arr
-    .filter((p) => typeof p?.id === "number")
+
+  return arr
+    .filter(
+      (p): p is ProjectApiItem & { id: number } => typeof p?.id === "number"
+    )
     .map((p) => {
-      const id = p.id as number;
+      const id = p.id;
 
       const title = (p.title || "").trim() || `Project ${id}`;
 
@@ -111,7 +164,7 @@ export function mapProjectsApiToProjects(json: ProjectsApiResponse): Project[] {
         (p.description || "").trim() ||
         (() => {
           const firstParagraph = (p.content || []).find(
-            (b: any) => b?.__component === "blocks.paragraph"
+            (b): b is ParagraphBlock => b?.__component === "blocks.paragraph"
           );
           return firstParagraph
             ? extractFirstTextFromContent(firstParagraph)
@@ -119,7 +172,7 @@ export function mapProjectsApiToProjects(json: ProjectsApiResponse): Project[] {
         })() ||
         "Learn more about this project.";
 
-      const image = pickBestImageUrl(p.coverImage) || "/images/project1.jpeg"; // safe local fallback
+      const image = pickBestImageUrl(p.coverImage) || "/images/project1.jpeg";
 
       const goal = Number(p.goal ?? 0) || 0;
       const raised = Number(p.raised ?? 0) || 0;
@@ -127,8 +180,6 @@ export function mapProjectsApiToProjects(json: ProjectsApiResponse): Project[] {
 
       return { id, image, title, description: desc, goal, raised, donations };
     });
-
-  return mapped;
 }
 
 export const PROJECTS_FALLBACK: Project[] = [
@@ -162,8 +213,7 @@ export async function fetchProjects(): Promise<Project[]> {
     const endpoint =
       "/projects?populate[coverImage][populate]=*&populate[content][on][blocks.heading][populate]=*&populate[content][on][blocks.paragraph]=*&populate[content][on][blocks.paragraph-with-image][populate]=*&populate[content][on][elements.link]=*";
 
-    const base = getBaseApi();
-    const url = base ? `${base}${endpoint}` : endpoint;
+    const url = joinApi(endpoint);
 
     const res = await fetch(url, {
       method: "GET",
@@ -174,7 +224,6 @@ export async function fetchProjects(): Promise<Project[]> {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const json = (await res.json()) as ProjectsApiResponse;
-
     if (!json?.data?.length) throw new Error("Bad data");
 
     setCached(json);

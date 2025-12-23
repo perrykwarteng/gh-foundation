@@ -1,45 +1,109 @@
+// ✅ about-content.ts (FULL CODE — strict types + fixes ALL Strapi image URLs)
+
 export type StrapiImage = {
   url?: string;
   alternativeText?: string | null;
   caption?: string | null;
   width?: number;
   height?: number;
-  formats?: Record<string, { url: string; width: number; height: number }>;
+
+  // strict-safe: allow known keys + any extra
+  formats?: {
+    large?: { url?: string; width?: number; height?: number };
+    medium?: { url?: string; width?: number; height?: number };
+    small?: { url?: string; width?: number; height?: number };
+    thumbnail?: { url?: string; width?: number; height?: number };
+    [key: string]:
+      | { url?: string; width?: number; height?: number }
+      | undefined;
+  };
+};
+
+type RichTextChild = { text?: string; type?: string };
+type RichTextNode = { type?: string; children?: RichTextChild[] };
+
+export type AboutContentBlock = {
+  __component?: string;
+  id?: number;
+  reversed?: boolean;
+  imageLandscape?: boolean;
+  image?: StrapiImage | null;
+  content?: RichTextNode[];
 };
 
 export type AboutApiResponse = {
   data?: {
     title?: string;
     description?: string;
-    content?: Array<{
-      __component?: string;
-      id?: number;
-      reversed?: boolean;
-      imageLandscape?: boolean;
-      image?: StrapiImage;
-      content?: Array<{
-        type?: string;
-        children?: Array<{ text?: string; type?: string }>;
-      }>;
-    }>;
+    content?: AboutContentBlock[];
   };
 };
 
 const CACHE_KEY = "about_page_cache_v1";
 
-function getBaseApi() {
+/* ===================== BASE HELPERS ===================== */
+
+function getBaseApiRaw() {
   return (process.env.NEXT_PUBLIC_BASE_API || "").trim().replace(/\/$/, "");
 }
 
+/**
+ * ✅ API base for fetch endpoints
+ * Example env: https://api.goldenheightfoundation.org/api
+ */
+function getApiBase() {
+  return getBaseApiRaw();
+}
+
+/**
+ * ✅ Origin base for assets (remove /api)
+ * https://api.goldenheightfoundation.org/api -> https://api.goldenheightfoundation.org
+ */
+function getOriginBase() {
+  const base = getBaseApiRaw();
+  return base.endsWith("/api") ? base.slice(0, -4) : base;
+}
+
+/**
+ * ✅ Join API endpoint safely (avoids /api/api)
+ */
+function joinApi(endpointPath: string) {
+  const apiBase = getApiBase();
+  if (!apiBase) return endpointPath;
+
+  const hasApiSuffix = apiBase.endsWith("/api");
+  const endpointHasApiPrefix = endpointPath.startsWith("/api/");
+
+  if (hasApiSuffix && endpointHasApiPrefix) {
+    return `${apiBase}${endpointPath.replace("/api", "")}`;
+  }
+
+  return `${apiBase}${endpointPath}`;
+}
+
+/**
+ * ✅ Use this for IMAGES/UPLOADS
+ * - keeps absolute URL unchanged
+ * - normalizes /api/uploads -> /uploads
+ * - prefixes with ORIGIN (NOT /api)
+ */
 export function strapiUrl(path?: string) {
   if (!path) return "";
   if (path.startsWith("http://") || path.startsWith("https://")) return path;
 
-  const base = getBaseApi();
-  if (!base) return path;
+  const normalized = path.startsWith("/api/uploads/")
+    ? path.replace("/api", "")
+    : path;
 
-  return path.startsWith("/") ? `${base}${path}` : `${base}/${path}`;
+  const origin = getOriginBase();
+  if (!origin) return normalized;
+
+  return normalized.startsWith("/")
+    ? `${origin}${normalized}`
+    : `${origin}/${normalized}`;
 }
+
+/* ===================== CACHE HELPERS ===================== */
 
 function safeJsonParse<T>(value: string | null): T | null {
   try {
@@ -55,12 +119,16 @@ export function getCachedAbout(): AboutApiResponse | null {
   return safeJsonParse<AboutApiResponse>(localStorage.getItem(CACHE_KEY));
 }
 
-export function setCachedAbout(data: AboutApiResponse) {
+export function setCachedAbout(data: AboutApiResponse): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-  } catch {}
+  } catch {
+    // keep silent
+  }
 }
+
+/* ===================== FALLBACK ===================== */
 
 export const ABOUT_FALLBACK: AboutApiResponse = {
   data: {
@@ -90,6 +158,8 @@ export const ABOUT_FALLBACK: AboutApiResponse = {
   },
 };
 
+/* ===================== FETCH ===================== */
+
 export async function fetchAboutContent(): Promise<AboutApiResponse> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 9000);
@@ -98,8 +168,7 @@ export async function fetchAboutContent(): Promise<AboutApiResponse> {
     const endpoint =
       "/about?populate[content][on][blocks.paragraph-with-image][populate]=image";
 
-    const base = getBaseApi();
-    const url = base ? `${base}${endpoint}` : endpoint;
+    const url = joinApi(endpoint);
 
     const res = await fetch(url, {
       method: "GET",
@@ -110,7 +179,6 @@ export async function fetchAboutContent(): Promise<AboutApiResponse> {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const json = (await res.json()) as AboutApiResponse;
-
     if (!json?.data?.content?.length) throw new Error("Bad data");
 
     setCachedAbout(json);

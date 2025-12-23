@@ -2,7 +2,16 @@ export type GalleryApiImage = {
   url?: string;
   alternativeText?: string | null;
   caption?: string | null;
-  formats?: Record<string, { url: string; width: number; height: number }>;
+  // ✅ allow known Strapi keys + any extra format keys
+  formats?: {
+    large?: { url?: string; width?: number; height?: number };
+    medium?: { url?: string; width?: number; height?: number };
+    small?: { url?: string; width?: number; height?: number };
+    thumbnail?: { url?: string; width?: number; height?: number };
+    [key: string]:
+      | { url?: string; width?: number; height?: number }
+      | undefined;
+  };
 };
 
 export type GalleryApiItem = {
@@ -18,8 +27,8 @@ export type GalleryApiItem = {
 export type GalleryApiResponse = {
   data?: Array<{
     id?: number;
-    gallery?: GalleryApiItem[];
-    media?: any[];
+    gallery?: GalleryApiItem[] | null;
+    media?: unknown[]; // ✅ safer than any[]
   }>;
 };
 
@@ -61,14 +70,14 @@ export function getCachedGallery(): GalleryApiResponse | null {
   return safeJsonParse<GalleryApiResponse>(localStorage.getItem(CACHE_KEY));
 }
 
-export function setCachedGallery(data: GalleryApiResponse) {
+export function setCachedGallery(data: GalleryApiResponse): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(CACHE_KEY, JSON.stringify(data));
   } catch {
+    // keep silent (same behavior)
   }
 }
-
 
 export const GALLERY_FALLBACK: GalleryItem[] = [
   { id: 1, type: "image", src: "/images/g1.svg", alt: "Gallery image" },
@@ -89,20 +98,27 @@ export const GALLERY_FALLBACK: GalleryItem[] = [
 
 function pickBestImageUrl(img?: GalleryApiImage | null) {
   if (!img) return "";
-  const fmts = img.formats || {};
+
+  const fmts = img.formats;
   const preferred =
-    fmts.medium?.url || fmts.small?.url || fmts.large?.url || img.url || "";
+    fmts?.large?.url ||
+    fmts?.medium?.url ||
+    fmts?.small?.url ||
+    fmts?.thumbnail?.url ||
+    img.url ||
+    "";
+
   return apiUrl(preferred);
 }
 
 export function mapGalleryApiToItems(json: GalleryApiResponse): GalleryItem[] {
   const page = json?.data?.[0];
-  const gallery = page?.gallery || [];
+  const gallery = Array.isArray(page?.gallery) ? page!.gallery : [];
 
   const items: GalleryItem[] = [];
 
   for (const g of gallery) {
-    const src = pickBestImageUrl(g?.image || null);
+    const src = pickBestImageUrl(g?.image ?? null);
     if (!src) continue;
 
     items.push({
