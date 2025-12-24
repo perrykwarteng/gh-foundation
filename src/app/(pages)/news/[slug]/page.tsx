@@ -46,6 +46,11 @@ function pickBestImageUrl(img?: StrapiImage | null) {
 
 type RichTextChild = { text?: string };
 
+type RichTextParagraphNode = {
+  type?: string;
+  children?: RichTextChild[];
+};
+
 type HeadingBlock = {
   __component?: "blocks.heading";
   id?: number;
@@ -55,10 +60,7 @@ type HeadingBlock = {
 type ParagraphWithImageBlock = {
   __component?: "blocks.paragraph-with-image";
   id?: number;
-  content?: Array<{
-    type?: string;
-    children?: RichTextChild[];
-  }>;
+  content?: RichTextParagraphNode[];
   imageLandscape?: boolean;
   reversed?: boolean;
   image?: StrapiImage | null;
@@ -67,7 +69,7 @@ type ParagraphWithImageBlock = {
 type ParagraphBlock = {
   __component?: "blocks.paragraph";
   id?: number;
-  content?: Array<{ children?: RichTextChild[] }>;
+  content?: RichTextParagraphNode[];
 };
 
 type LinkBlock = {
@@ -78,14 +80,27 @@ type LinkBlock = {
   isExternal?: boolean;
 };
 
+type UnknownBlock = {
+  __component?: string;
+  id?: number;
+};
+
 type ContentBlock =
   | HeadingBlock
   | ParagraphBlock
   | ParagraphWithImageBlock
   | LinkBlock
-  | { __component?: string; id?: number };
+  | UnknownBlock;
 
-function toText(nodes?: Array<{ children?: RichTextChild[] }>) {
+function isRecord(v: unknown): v is Record<string, unknown> {
+  return typeof v === "object" && v !== null;
+}
+
+function isContentBlock(v: unknown): v is ContentBlock {
+  return isRecord(v) && ("__component" in v || "id" in v);
+}
+
+function toText(nodes?: RichTextParagraphNode[]) {
   return (
     nodes
       ?.map((p) => (p?.children ?? []).map((c) => c?.text ?? "").join(""))
@@ -97,14 +112,18 @@ function toText(nodes?: Array<{ children?: RichTextChild[] }>) {
 function RenderBlocks({ blocks }: { blocks?: unknown }) {
   if (!Array.isArray(blocks) || blocks.length === 0) return null;
 
+  const safeBlocks: ContentBlock[] = blocks.filter(isContentBlock);
+
+  if (safeBlocks.length === 0) return null;
+
   return (
     <div className="space-y-6">
-      {(blocks as ContentBlock[]).map((b, idx) => {
-        const type = b?.__component;
+      {safeBlocks.map((b, idx) => {
+        const type = b.__component;
 
         if (type === "blocks.heading") {
           const block = b as HeadingBlock;
-          if (!block?.title) return null;
+          if (!block.title) return null;
           return (
             <h2
               key={block.id ?? idx}
@@ -131,7 +150,7 @@ function RenderBlocks({ blocks }: { blocks?: unknown }) {
 
         if (type === "blocks.paragraph-with-image") {
           const block = b as ParagraphWithImageBlock;
-          const text = toText(block.content as any);
+          const text = toText(block.content);
           const imgSrc = pickBestImageUrl(block.image);
 
           return (
@@ -164,10 +183,10 @@ function RenderBlocks({ blocks }: { blocks?: unknown }) {
 
         if (type === "elements.link") {
           const block = b as LinkBlock;
-          const href = (block?.href || "").trim();
+          const href = (block.href || "").trim();
           if (!href) return null;
 
-          const text = (block?.text || "").trim() || href;
+          const text = (block.text || "").trim() || href;
 
           return (
             <Link
@@ -188,11 +207,15 @@ function RenderBlocks({ blocks }: { blocks?: unknown }) {
   );
 }
 
-export default async function NewsDetailPage({
-  params,
-}: {
+type NewsDetailPageProps = {
   params: Promise<{ slug: string }>;
-}) {
+};
+
+type WithRawContent = {
+  rawContent?: unknown;
+};
+
+export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
   const { slug } = await params;
 
   const list = await fetchNews();
@@ -203,6 +226,11 @@ export default async function NewsDetailPage({
   }
 
   const imageSrc = article.image || "/images/B1.svg";
+
+  const maybeArticle = article as unknown as WithRawContent;
+  const raw = maybeArticle.rawContent;
+
+  const hasRawBlocks = Array.isArray(raw) && raw.length > 0;
 
   return (
     <Layout>
@@ -247,10 +275,8 @@ export default async function NewsDetailPage({
           </div>
 
           <div className="mt-8">
-            {"rawContent" in (article as any) &&
-            Array.isArray((article as any).rawContent) &&
-            (article as any).rawContent.length ? (
-              <RenderBlocks blocks={(article as any).rawContent} />
+            {hasRawBlocks ? (
+              <RenderBlocks blocks={raw} />
             ) : (
               <div className="prose prose-neutral max-w-none">
                 <div style={{ whiteSpace: "pre-wrap" }}>{article.content}</div>

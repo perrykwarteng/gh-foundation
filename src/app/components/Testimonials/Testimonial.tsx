@@ -52,12 +52,33 @@ type HomePageResponse = {
   };
 };
 
-export default function Testimonials() {
-  const [currentSlide, setCurrentSlide] = useState<number>(0);
-  const [apiTestimonials, setApiTestimonials] = useState<Testimonial[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+function isRecord(v: unknown): v is Record<string, unknown> {
+  return typeof v === "object" && v !== null;
+}
 
-  // ✅ Fetch homepage data, then extract testimonials
+function isTestimonial(v: unknown): v is Testimonial {
+  if (!isRecord(v)) return false;
+
+  const idOk =
+    v.id === undefined || typeof v.id === "number" || typeof v.id === "string";
+
+  const messageOk = v.message === undefined || typeof v.message === "string";
+  const nameOk = v.name === undefined || typeof v.name === "string";
+  const roleOk = v.role === undefined || typeof v.role === "string";
+
+  return idOk && messageOk && nameOk && roleOk;
+}
+
+function normalizeTestimonials(input: unknown): Testimonial[] {
+  if (!Array.isArray(input)) return [];
+  return input.filter(isTestimonial);
+}
+
+export default function Testimonials() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [apiTestimonials, setApiTestimonials] = useState<Testimonial[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const controller = new AbortController();
 
@@ -82,35 +103,40 @@ export default function Testimonials() {
           );
         }
 
-        const json = (await res.json()) as HomePageResponse;
+        const json: unknown = await res.json();
+        const typed = json as HomePageResponse;
 
         // ✅ Your real response shape: json.data.testimonials
-        const t = json?.data?.testimonials;
+        const t = typed?.data?.testimonials;
 
-        if (Array.isArray(t)) setApiTestimonials(t as Testimonial[]);
-        else setApiTestimonials([]);
-      } catch (err) {
-        if ((err as any)?.name !== "AbortError") {
-          console.error("Testimonials fetch error:", err);
-          setApiTestimonials([]);
+        setApiTestimonials(normalizeTestimonials(t));
+      } catch (err: unknown) {
+        if (
+          typeof err === "object" &&
+          err !== null &&
+          "name" in err &&
+          (err as { name?: unknown }).name === "AbortError"
+        ) {
+          return;
         }
+
+        console.error("Testimonials fetch error:", err);
+        setApiTestimonials([]);
       } finally {
         setIsLoading(false);
       }
     }
 
-    load();
+    void load();
     return () => controller.abort();
   }, []);
 
-  // ✅ Choose API testimonials or fallback
-  const testimonials = useMemo<Testimonial[]>(() => {
-    return apiTestimonials.length > 0
-      ? apiTestimonials
-      : (fallbackTestimonials as unknown as Testimonial[]);
+  // ✅ Choose API testimonials or fallback (no unsafe casts)
+  const testimonials: Testimonial[] = useMemo(() => {
+    return apiTestimonials.length > 0 ? apiTestimonials : fallbackTestimonials;
   }, [apiTestimonials]);
 
-  // ✅ If testimonials list changes, reset slide index safely
+  // ✅ Reset slide index if list changes
   useEffect(() => {
     setCurrentSlide(0);
   }, [testimonials.length]);
@@ -123,7 +149,6 @@ export default function Testimonials() {
     },
   });
 
-  // ✅ Autoplay (only if more than 1 testimonial)
   useEffect(() => {
     const slider: KeenSliderInstance | null = instanceRef.current;
     if (!slider || testimonials.length <= 1) return;
@@ -153,19 +178,19 @@ export default function Testimonials() {
 
           <div ref={sliderRef} className="keen-slider w-full max-w-2xl">
             {testimonials.map((t, i) => (
-              <div key={t?.id ?? i} className="keen-slider__slide">
+              <div key={t.id ?? i} className="keen-slider__slide">
                 <p className="text-gray-700 md:mt-3 lg:mt-8">
-                  {t?.message?.trim()
+                  {t.message?.trim()
                     ? t.message
                     : "No testimonial message provided."}
                 </p>
 
                 <div className="pt-4 lg:pt-7">
                   <p className="font-bold text-[#c4a54a]">
-                    {t?.name?.trim() ? t.name : "Anonymous"}
+                    {t.name?.trim() ? t.name : "Anonymous"}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {t?.role?.trim() ? t.role : "Supporter"}
+                    {t.role?.trim() ? t.role : "Supporter"}
                   </p>
                 </div>
               </div>
