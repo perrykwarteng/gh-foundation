@@ -99,7 +99,7 @@ const FAQSInline = ({ faqs }: { faqs: Faq[] }) => {
         >
           <div className="flex items-start gap-4">
             <div className="flex-1">
-              <h3 className="text-xl text-[#0e372d] md:text-2xl font-semibold">
+              <h3 className="text-xl text-[#0e372d] md:text-[22px] font-semibold">
                 {faq.question}
               </h3>
               {openIndex === index && (
