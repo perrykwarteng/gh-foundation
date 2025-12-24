@@ -3,11 +3,29 @@
 import Image from "next/image";
 import TestimonialImg from "../../../../public/images/T1.jpg";
 import QuoteImg from "../../../../public/icons/Quote.svg";
-import { useEffect, useState } from "react";
-import { useKeenSlider } from "keen-slider/react";
+import { useEffect, useMemo, useState } from "react";
+import { useKeenSlider, type KeenSliderInstance } from "keen-slider/react";
 import { motion } from "framer-motion";
+import "keen-slider/keen-slider.min.css";
 
-const testimonials = [
+const API_PATH =
+  "/homepage?populate[blocks][on][blocks.hero-section][populate][images]=true&populate[blocks][on][blocks.info-block][populate][image]=true&populate[testimonials]=true&populate[partners][populate][logo]=true";
+
+const BASE_API_RAW = (process.env.NEXT_PUBLIC_BASE_API || "")
+  .trim()
+  .replace(/\/$/, "");
+
+type Testimonial = {
+  id?: number | string;
+  message?: string;
+  name?: string;
+  role?: string;
+};
+
+// ✅ Local fallback testimonials
+const fallbackTestimonials: Array<
+  Required<Pick<Testimonial, "message" | "name" | "role">>
+> = [
   {
     message:
       "Sollicitudin vitae diam senectus molestie cras in gravida egestas ac. Tortor condimentum suspendisse duis et velit donec turpis interdum elit.",
@@ -28,23 +46,94 @@ const testimonials = [
   },
 ];
 
-export default function Testimonials() {
-  const [currentSlide, setCurrentSlide] = useState(0);
+type HomePageResponse = {
+  data?: {
+    testimonials?: unknown;
+  };
+};
 
-  const [sliderRef, instanceRef] = useKeenSlider({
-    loop: true,
+export default function Testimonials() {
+  const [currentSlide, setCurrentSlide] = useState<number>(0);
+  const [apiTestimonials, setApiTestimonials] = useState<Testimonial[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // ✅ Fetch homepage data, then extract testimonials
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function load() {
+      try {
+        if (!BASE_API_RAW) {
+          console.warn("NEXT_PUBLIC_BASE_API is missing.");
+          setApiTestimonials([]);
+          return;
+        }
+
+        const res = await fetch(`${BASE_API_RAW}${API_PATH}`, {
+          cache: "no-store",
+          signal: controller.signal,
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!res.ok) {
+          const text = await res.text().catch(() => "");
+          throw new Error(
+            `Fetch failed: ${res.status} ${res.statusText} ${text}`
+          );
+        }
+
+        const json = (await res.json()) as HomePageResponse;
+
+        // ✅ Your real response shape: json.data.testimonials
+        const t = json?.data?.testimonials;
+
+        if (Array.isArray(t)) setApiTestimonials(t as Testimonial[]);
+        else setApiTestimonials([]);
+      } catch (err) {
+        if ((err as any)?.name !== "AbortError") {
+          console.error("Testimonials fetch error:", err);
+          setApiTestimonials([]);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    load();
+    return () => controller.abort();
+  }, []);
+
+  // ✅ Choose API testimonials or fallback
+  const testimonials = useMemo<Testimonial[]>(() => {
+    return apiTestimonials.length > 0
+      ? apiTestimonials
+      : (fallbackTestimonials as unknown as Testimonial[]);
+  }, [apiTestimonials]);
+
+  // ✅ If testimonials list changes, reset slide index safely
+  useEffect(() => {
+    setCurrentSlide(0);
+  }, [testimonials.length]);
+
+  const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
+    loop: testimonials.length > 1,
     slides: { perView: 1, spacing: 15 },
     slideChanged(slider) {
       setCurrentSlide(slider.track.details.rel);
     },
   });
 
+  // ✅ Autoplay (only if more than 1 testimonial)
   useEffect(() => {
-    const timer = setInterval(() => {
-      instanceRef.current?.next();
+    const slider: KeenSliderInstance | null = instanceRef.current;
+    if (!slider || testimonials.length <= 1) return;
+
+    const timer = window.setInterval(() => {
+      slider.next();
     }, 6000);
-    return () => clearInterval(timer);
-  }, [instanceRef]);
+
+    return () => window.clearInterval(timer);
+  }, [instanceRef, testimonials.length]);
 
   return (
     <section className="bg-[#F8F9FA] h-full py-10 px-6 md:px-14">
@@ -53,33 +142,51 @@ export default function Testimonials() {
           <div className="max-w-[80px]">
             <Image src={QuoteImg} alt="quote image" />
           </div>
+
           <h3 className="text-[28px] text-[#0e372d] md:text-[34px] font-semibold mt-5 lg:mt-10 mb-3 leading-snug">
             Together, we can change lives for the better
           </h3>
 
+          {isLoading && (
+            <p className="text-sm text-gray-500 mt-2">Loading testimonials…</p>
+          )}
+
           <div ref={sliderRef} className="keen-slider w-full max-w-2xl">
             {testimonials.map((t, i) => (
-              <div key={i} className="keen-slider__slide">
-                <p className="text-gray-700 md:mt-3 lg:mt-8">{t.message}</p>
+              <div key={t?.id ?? i} className="keen-slider__slide">
+                <p className="text-gray-700 md:mt-3 lg:mt-8">
+                  {t?.message?.trim()
+                    ? t.message
+                    : "No testimonial message provided."}
+                </p>
+
                 <div className="pt-4 lg:pt-7">
-                  <p className="font-bold text-[#c4a54a]">{t.name}</p>
-                  <p className="text-sm text-gray-500">{t.role}</p>
+                  <p className="font-bold text-[#c4a54a]">
+                    {t?.name?.trim() ? t.name : "Anonymous"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {t?.role?.trim() ? t.role : "Supporter"}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="flex justify-center mt-4 gap-2">
-            {testimonials.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => instanceRef.current?.moveToIdx(idx)}
-                className={`w-3 h-3 rounded-full transition-colors ${
-                  currentSlide === idx ? "bg-[#c4a54a]" : "bg-gray-300"
-                }`}
-              />
-            ))}
-          </div>
+          {testimonials.length > 1 && (
+            <div className="flex justify-center mt-4 gap-2">
+              {testimonials.map((_, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  aria-label={`Go to testimonial ${idx + 1}`}
+                  onClick={() => instanceRef.current?.moveToIdx(idx)}
+                  className={`w-3 h-3 rounded-full transition-colors ${
+                    currentSlide === idx ? "bg-[#c4a54a]" : "bg-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         <motion.div
@@ -93,6 +200,7 @@ export default function Testimonials() {
             src={TestimonialImg}
             alt="Testimonial Image"
             className="w-full h-auto rounded-[15px]"
+            priority={false}
           />
         </motion.div>
       </div>

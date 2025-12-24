@@ -17,13 +17,18 @@ export type StrapiImage = {
 type RichTextChild = { text?: string };
 type RichTextNode = { type?: string; children?: RichTextChild[] };
 
+// ✅ UPDATED to match your API fields
 export type ProjectApiItem = {
   id?: number;
   title?: string;
   description?: string;
-  goal?: number;
-  raised?: number;
-  donations?: number;
+  slug?: string;
+
+  // API fields you showed
+  goalAmount?: string; // "5000 USD"
+  raisedAmount?: string; // "100 USD"
+  numberOfDonations?: string; // "1"
+
   coverImage?: StrapiImage | null;
 
   content?: Array<{
@@ -148,6 +153,18 @@ function extractFirstTextFromContent(block?: ParagraphBlock | null): string {
   return joined || "";
 }
 
+// ✅ Parses "5000 USD" -> 5000, "1" -> 1, "₵5,000" -> 5000
+function parseAmount(value?: string | number | null): number {
+  if (typeof value === "number") return Number.isFinite(value) ? value : 0;
+  if (!value) return 0;
+
+  const cleaned = String(value)
+    .replace(/,/g, "")
+    .match(/-?\d+(\.\d+)?/);
+
+  return cleaned ? Number(cleaned[0]) : 0;
+}
+
 export function mapProjectsApiToProjects(json: ProjectsApiResponse): Project[] {
   const arr = json?.data ?? [];
 
@@ -174,9 +191,10 @@ export function mapProjectsApiToProjects(json: ProjectsApiResponse): Project[] {
 
       const image = pickBestImageUrl(p.coverImage) || "/images/project1.jpeg";
 
-      const goal = Number(p.goal ?? 0) || 0;
-      const raised = Number(p.raised ?? 0) || 0;
-      const donations = Number(p.donations ?? 0) || 0;
+      // ✅ Use your API fields
+      const goal = parseAmount(p.goalAmount);
+      const raised = parseAmount(p.raisedAmount);
+      const donations = parseAmount(p.numberOfDonations);
 
       return { id, image, title, description: desc, goal, raised, donations };
     });
@@ -210,6 +228,7 @@ export async function fetchProjects(): Promise<Project[]> {
   const timeout = setTimeout(() => controller.abort(), 9000);
 
   try {
+    // ✅ You only need coverImage + content if you display it
     const endpoint =
       "/projects?populate[coverImage][populate]=*&populate[content][on][blocks.heading][populate]=*&populate[content][on][blocks.paragraph]=*&populate[content][on][blocks.paragraph-with-image][populate]=*&populate[content][on][elements.link]=*";
 

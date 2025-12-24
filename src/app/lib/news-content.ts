@@ -5,7 +5,6 @@ export type StrapiImage = {
   width?: number;
   height?: number;
 
-  // ✅ known keys + allow extra format keys
   formats?: {
     large?: { url?: string; width?: number; height?: number };
     medium?: { url?: string; width?: number; height?: number };
@@ -22,25 +21,42 @@ type RichTextParagraphNode = { children?: RichTextChild[] };
 
 type HeadingBlock = {
   __component?: "blocks.heading";
+  id?: number;
   title?: string;
 };
 
+type ParagraphWithImageBlock = {
+  __component?: "blocks.paragraph-with-image";
+  id?: number;
+  content?: Array<{
+    type?: string;
+    children?: RichTextChild[];
+  }>;
+  imageLandscape?: boolean;
+  reversed?: boolean;
+  image?: StrapiImage | null;
+};
+
 type ParagraphBlock = {
-  __component?: "blocks.paragraph" | "blocks.paragraph-with-image";
+  __component?: "blocks.paragraph";
+  id?: number;
   content?: RichTextParagraphNode[];
 };
 
 type LinkBlock = {
   __component?: "elements.link";
-  text?: string;
-  href?: string;
+  id?: number;
+  text?: string | null;
+  href?: string | null;
+  isExternal?: boolean;
 };
 
 type ContentBlock =
   | HeadingBlock
   | ParagraphBlock
+  | ParagraphWithImageBlock
   | LinkBlock
-  | { __component?: string };
+  | { __component?: string; id?: number };
 
 export type NewsApiItem = {
   id?: number;
@@ -50,8 +66,6 @@ export type NewsApiItem = {
   publishedAt?: string;
   createdAt?: string;
   coverImage?: StrapiImage | null;
-
-  // ✅ safer than any[]
   content?: ContentBlock[] | unknown;
 };
 
@@ -66,7 +80,12 @@ export type NewsItem = {
   date: string;
   description: string;
   image: string;
+
+  // ✅ keep plain string (for cards / fallback display)
   content: string;
+
+  // ✅ keep blocks (for detail page render headings/images/links)
+  rawContent?: ContentBlock[];
 };
 
 const CACHE_KEY = "news_page_cache_v1";
@@ -126,21 +145,21 @@ function setCached(data: NewsApiResponse): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-  } catch {
-    // keep silent (same behavior)
-  }
+  } catch {}
 }
 
 function pickBestImageUrl(img?: StrapiImage | null) {
   if (!img) return "";
   const fmts = img.formats;
+
   const preferred =
+    fmts?.large?.url ||
     fmts?.medium?.url ||
     fmts?.small?.url ||
-    fmts?.large?.url ||
     fmts?.thumbnail?.url ||
     img.url ||
     "";
+
   return strapiAssetUrl(preferred);
 }
 
@@ -157,7 +176,7 @@ function extractTextFromBlocks(blocks: unknown): string {
       if (t) out.push(`\n### ${t}\n`);
     }
 
-    if (type === "blocks.paragraph" || type === "blocks.paragraph-with-image") {
+    if (type === "blocks.paragraph") {
       const nodes = (b as ParagraphBlock)?.content ?? [];
       const txt = nodes
         .map((p) =>
@@ -165,6 +184,15 @@ function extractTextFromBlocks(blocks: unknown): string {
             .map((c) => (c?.text ? String(c.text) : ""))
             .join("")
         )
+        .join("\n")
+        .trim();
+      if (txt) out.push(txt);
+    }
+
+    if (type === "blocks.paragraph-with-image") {
+      const nodes = (b as ParagraphWithImageBlock)?.content ?? [];
+      const txt = nodes
+        .map((p) => (p?.children ?? []).map((c) => c?.text ?? "").join(""))
         .join("\n")
         .trim();
       if (txt) out.push(txt);
@@ -189,6 +217,7 @@ export const NEWS_FALLBACK: NewsItem[] = [
     description: "Donations of learning materials",
     image: "/images/B1.svg",
     content: "Updates will appear here when the network is available.",
+    rawContent: [],
   },
 ];
 
@@ -203,12 +232,18 @@ export function mapNewsApiToNewsItems(json: NewsApiResponse): NewsItem[] {
 
       const date =
         String(n.publishedAt || n.createdAt || "").slice(0, 10) || "";
+
       const description = (n.description || "").trim() || "Latest update.";
       const image = pickBestImageUrl(n.coverImage) || "/images/B1.svg";
 
+      // ✅ this matches your response (content is an array of blocks)
+      const rawContent = Array.isArray(n.content)
+        ? (n.content as ContentBlock[])
+        : [];
+
       const content = extractTextFromBlocks(n.content) || description;
 
-      return { slug, title, date, description, image, content };
+      return { slug, title, date, description, image, content, rawContent };
     });
 }
 
@@ -217,8 +252,9 @@ export async function fetchNews(): Promise<NewsItem[]> {
   const timeout = setTimeout(() => controller.abort(), 9000);
 
   try {
+    // ✅ includes blocks + image inside paragraph-with-image
     const endpoint =
-      "/news-pages?populate[coverImage][populate]=*&populate[content][on][blocks.heading][populate]=*&populate[content][on][blocks.paragraph]=*&populate[content][on][blocks.paragraph-with-image][populate]=*&populate[content][on][elements.link]=*";
+      "/news-pages?populate[coverImage][populate]=*&populate[content][on][blocks.heading][populate]=*&populate[content][on][blocks.paragraph][populate]=*&populate[content][on][blocks.paragraph-with-image][populate][image]=true&populate[content][on][elements.link][populate]=*";
 
     const url = joinApi(endpoint);
 

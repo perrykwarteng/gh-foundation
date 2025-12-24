@@ -35,7 +35,10 @@ type ListNode = {
   children?: ListItemNode[];
 };
 
-type RichTextNode = ParagraphNode | ListNode | { type?: string; children?: unknown };
+type RichTextNode =
+  | ParagraphNode
+  | ListNode
+  | { type?: string; children?: unknown };
 
 type InfoBlock = {
   __component?: "blocks.info-block" | string;
@@ -95,7 +98,10 @@ const ASSET_BASE = BASE_API_RAW.endsWith("/api")
 
 function toAbsoluteUrl(maybeRelative?: string) {
   if (!maybeRelative) return "";
-  if (maybeRelative.startsWith("http://") || maybeRelative.startsWith("https://"))
+  if (
+    maybeRelative.startsWith("http://") ||
+    maybeRelative.startsWith("https://")
+  )
     return maybeRelative;
 
   // normalize "/api/uploads/.." to "/uploads/.."
@@ -262,44 +268,23 @@ export default function Transform() {
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true, amount: 0.2 }}
           >
-            <div>
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full flex items-center justify-center bg-[#0e372d] text-white text-sm">
-                  1
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-2">
+              {(
+                content.points || [
+                  "Empower Children",
+                  "Support Women",
+                  "Partner for Change",
+                  "Create Lasting Impact",
+                  "Create Lasting Impact",
+                ]
+              ).map((point, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full flex items-center justify-center bg-[#0e372d] text-white text-sm">
+                    {index + 1}
+                  </div>
+                  <p className="font-semibold text-[#0e372d]">{point}</p>
                 </div>
-                <p className="font-semibold text-[#0e372d]">
-                  {content.points[0] || "Empower Children"}
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2 mt-2">
-                <div className="w-6 h-6 rounded-full flex items-center justify-center bg-[#0e372d] text-white text-sm">
-                  2
-                </div>
-                <p className="font-semibold text-[#0e372d]">
-                  {content.points[1] || "Support Women"}
-                </p>
-              </div>
-            </div>
-
-            <div>
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full flex items-center justify-center bg-[#0e372d] text-white text-sm">
-                  3
-                </div>
-                <p className="font-semibold text-[#0e372d]">
-                  {content.points[2] || "Partner for Change"}
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2 mt-2">
-                <div className="w-6 h-6 rounded-full flex items-center justify-center bg-[#0e372d] text-white text-sm">
-                  4
-                </div>
-                <p className="font-semibold text-[#0e372d]">
-                  {content.points[3] || "Create Lasting Impact"}
-                </p>
-              </div>
+              ))}
             </div>
           </motion.div>
         </div>
