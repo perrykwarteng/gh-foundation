@@ -100,7 +100,7 @@ function getApiBase() {
 
 function getOriginBase() {
   const base = getBaseApiRaw();
-  return base.endsWith("/api") ? base.slice(0, -4) : base;
+  return base;
 }
 
 function joinApi(endpointPath: string) {

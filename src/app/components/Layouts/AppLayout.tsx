@@ -40,40 +40,52 @@ interface GlobalData {
 
 export default function Layout({ children }: { children: ReactNode }) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [global, setGlobal] = useState<GlobalData | null>(null);
+  const [globalData, setGlobalData] = useState<GlobalData | null>(null);
 
   useEffect(() => {
     const loadGlobalData = async () => {
       try {
         const response = await getGlobal();
-        setGlobal(response?.data?.attributes ?? null);
+
+        // response shape (from you):
+        // { data: { bankInformation, momo, internationalTransfers, advertisement, ... }, meta: {} }
+        const data = response?.data;
+
+        const normalized: GlobalData = {
+          bankInformation: data?.bankInformation,
+          momo: data?.momo,
+          internationalTransfers: data?.internationalTransfers,
+          advertisement: data?.advertisement,
+        };
+
+        setGlobalData(normalized);
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.error("Failed to load global data:", error.message);
         } else {
           console.error("Failed to load global data");
         }
-        setGlobal(null);
+        setGlobalData(null);
       }
     };
 
     loadGlobalData();
   }, []);
 
-  const bank: BankInformation = global?.bankInformation ?? {
+  const bank: BankInformation = globalData?.bankInformation ?? {
     bankName: "Zenith Bank Ghana Ltd.",
     accountNumber: "6011427138",
     accountName: "Golden Height Foundation",
     branch: "University of Cape Coast Branch, Cape Coast",
   };
 
-  const momo: MomoInformation = global?.momo ?? {
+  const momo: MomoInformation = globalData?.momo ?? {
     Name: "Golden Height Foundation",
     Number: "(+233) 55 685 3499",
   };
 
   const international: InternationalTransfers =
-    global?.internationalTransfers ?? {
+    globalData?.internationalTransfers ?? {
       branchCode: "120301",
       bankCode: "ZEBLGHAC",
       bankCity: "ACCRA",
@@ -83,8 +95,8 @@ export default function Layout({ children }: { children: ReactNode }) {
     };
 
   const advertisementText: string =
-    global?.advertisement?.content ??
-    "UPCOMING EVENT IN DECEMBER 2025 — Donation of back packs, exercise books, pencil cases, pens, pencils, and other writing aids to 200 pupils. ESTIMATED COST: GHS 47,000.00 (≈ USD 3,900)";
+    globalData?.advertisement?.content ??
+    "UPCOMING EVENT IN DECEMBER 2029. Donation of back packs, exercise books, pencil cases, pens, pencils, and other writing aids to 200 pupils. ESTIMATED COST: GHS 47,000.00 (≈ USD 3,900)";
 
   return (
     <div className="flex flex-col min-h-screen">

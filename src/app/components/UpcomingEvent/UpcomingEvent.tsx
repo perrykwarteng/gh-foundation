@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 
 interface UpcomingEventProps {
-  content?: string; // advertisement text
+  content?: string;
 }
 
 export default function UpcomingEvent({ content }: UpcomingEventProps) {
