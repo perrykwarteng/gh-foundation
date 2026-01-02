@@ -24,7 +24,7 @@ export default function SingleProject({
 
   return (
     <div className="Card max-w-[416px] bg-white">
-      <div className="Image w-full h-[280px] relative overflow-hidden">
+      <div className="Image w-full h-[480px] relative overflow-hidden">
         {isRemote ? (
           <Image
             src={image as string}
