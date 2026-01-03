@@ -79,7 +79,9 @@ function withAbsoluteUrl(path?: string | null) {
   const base = getStrapiBase();
   if (!base) return null;
 
-  return `${base}${path}`;
+  const b = base.replace(/\/$/, "");
+  const p = path.startsWith("/") ? path : `/${path}`;
+  return `${b}${p}`;
 }
 
 function pickBestImageUrl(img?: ApiTeamMember["image"]) {
