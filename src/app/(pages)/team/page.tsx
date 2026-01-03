@@ -65,7 +65,7 @@ function normalizeGroup(group?: string | null) {
 
 function withAbsoluteUrl(path?: string | null) {
   if (!path) return null;
-  if (path.startsWith("http")) return path;
+  if (path.startsWith("https")) return path;
   return `${process.env.NEXT_PUBLIC_BASE_API_STRAPI}${path}`;
 }
 
