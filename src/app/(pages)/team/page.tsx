@@ -66,9 +66,9 @@ function getStrapiBase() {
     /\/$/,
     ""
   );
-  const api = (process.env.NEXT_PUBLIC_BASE_API || "").replace(/\/$/, "");
+  // const api = (process.env.NEXT_PUBLIC_BASE_API || "").replace(/\/$/, "");
 
-  return strapi || api || "";
+  return strapi || "";
 }
 
 function withAbsoluteUrl(path?: string | null) {
