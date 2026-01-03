@@ -45,8 +45,6 @@ export type Person = {
   };
 };
 
-// const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
-
 function normalizeGroup(group?: string | null) {
   const g = (group || "").trim();
   if (!g) return "Team";
@@ -63,10 +61,25 @@ function normalizeGroup(group?: string | null) {
   return cleaned;
 }
 
+function getStrapiBase() {
+  const strapi = (process.env.NEXT_PUBLIC_BASE_API_STRAPI || "").replace(
+    /\/$/,
+    ""
+  );
+  const api = (process.env.NEXT_PUBLIC_BASE_API || "").replace(/\/$/, "");
+
+  return strapi || api || "";
+}
+
 function withAbsoluteUrl(path?: string | null) {
   if (!path) return null;
-  if (path.startsWith("https")) return path;
-  return `${process.env.NEXT_PUBLIC_BASE_API_STRAPI}${path}`;
+
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+
+  const base = getStrapiBase();
+  if (!base) return null;
+
+  return `${base}${path}`;
 }
 
 function pickBestImageUrl(img?: ApiTeamMember["image"]) {
@@ -93,12 +106,16 @@ export default function Team() {
         setLoading(true);
         setError(null);
 
-        if (!process.env.NEXT_PUBLIC_BASE_API) {
-          throw new Error("NEXT_PUBLIC_API_URL is not set.");
+        const apiBase = (process.env.NEXT_PUBLIC_BASE_API || "").replace(
+          /\/$/,
+          ""
+        );
+        if (!apiBase) {
+          throw new Error("NEXT_PUBLIC_BASE_API is not set.");
         }
 
         const endpoint =
-          `${process.env.NEXT_PUBLIC_BASE_API}/team-page` +
+          `${apiBase}/team-page` +
           `?populate[team][populate][image]=true&populate[team][populate][social]=true`;
 
         const res = await fetch(endpoint, { cache: "no-store" });
