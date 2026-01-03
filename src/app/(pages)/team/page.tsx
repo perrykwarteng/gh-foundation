@@ -138,8 +138,10 @@ export default function Team() {
         });
 
         if (!cancelled) setPeople(mapped);
-      } catch (e: any) {
-        if (!cancelled) setError(e?.message || "Failed to load team members.");
+      } catch (e: unknown) {
+        const message =
+          e instanceof Error ? e.message : "Failed to load team members.";
+        if (!cancelled) setError(message);
       } finally {
         if (!cancelled) setLoading(false);
       }
