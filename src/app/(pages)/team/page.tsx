@@ -1,34 +1,43 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Layout from "@/app/components/Layouts/AppLayout";
 import HeroText from "@/app/components/Hero-text/Hero-text";
 import { motion } from "framer-motion";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import { Linkedin, Twitter, Github } from "lucide-react";
 
-import GabrielImg from "../../../../public/images/team/Gabriel.jpeg";
-import MavisImg from "../../../../public/images/team/Mavis.jpeg";
-import RosettaImg from "../../../../public/images/team/Rosetta.jpeg";
-import PrinceImg from "../../../../public/images/team/Prince.jpeg";
-import MatthewImg from "../../../../public/images/team/Matthew.jpeg";
-import IsaacImg from "../../../../public/images/team/Isaac.jpeg";
-import StephenImg from "../../../../public/images/team/Stephen.jpeg";
+type ApiTeamMember = {
+  id: number;
+  name?: string | null;
+  title?: string | null;
+  group?: string | null;
+  bio?: string | null;
+  image?: {
+    url?: string | null;
+    alternativeText?: string | null;
+    formats?: {
+      thumbnail?: { url?: string | null };
+      small?: { url?: string | null };
+      medium?: { url?: string | null };
+    } | null;
+  } | null;
+  social?: {
+    linkedInLink?: string | null;
+    xLink?: string | null;
+    facebookLink?: string | null;
+    instagramLink?: string | null;
+    tiktokLink?: string | null;
+  } | null;
+};
 
 export type Person = {
-  image?: StaticImageData | null;
+  imageUrl?: string | null;
   id: string;
   name: string;
   title: string;
-  group:
-    | "Founders"
-    | "Leadership"
-    | "Team"
-    | "Volunteers"
-    | "Board of Trustees"
-    | string;
+  group: string;
   bio?: string;
-  email?: string;
   socials?: {
     linkedin?: string;
     twitter?: string;
@@ -36,96 +45,124 @@ export type Person = {
   };
 };
 
+// const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
+
+function normalizeGroup(group?: string | null) {
+  const g = (group || "").trim();
+  if (!g) return "Team";
+
+  const cleaned = g.replace(/\s+/g, " ").trim();
+
+  const lower = cleaned.toLowerCase();
+  if (lower === "founder" || lower === "founders") return "Founder";
+  if (lower === "leadership") return "Leadership";
+  if (lower === "team") return "Team";
+  if (lower === "volunteers" || lower === "volunteers ") return "Volunteers";
+  if (lower === "board of trustees") return "Board of Trustees";
+
+  return cleaned;
+}
+
+function withAbsoluteUrl(path?: string | null) {
+  if (!path) return null;
+  if (path.startsWith("http")) return path;
+  return `${process.env.NEXT_PUBLIC_BASE_API_STRAPI}${path}`;
+}
+
+function pickBestImageUrl(img?: ApiTeamMember["image"]) {
+  if (!img) return null;
+
+  const medium = img.formats?.medium?.url;
+  const small = img.formats?.small?.url;
+  const thumb = img.formats?.thumbnail?.url;
+  const original = img.url;
+
+  return withAbsoluteUrl(medium || small || original || thumb || null);
+}
+
 export default function Team() {
-  const people: Person[] = useMemo(
-    () => [
-      {
-        id: "p1",
-        name: "Dr (Mrs) Mavis Opoku Boadu (CA)",
-        title: "Founder/Executive Director",
-        group: "Founder",
-        image: MavisImg,
-        bio: "Dr. (Mrs.) Mavis Opoku-Boadu is a distinguished Chartered Accountant, Financial Consultant, and Philanthropist whose passion extends far beyond numbers. A dynamic Motivational Speaker, Moderator, and devoted Advocate for Children and Women, she embodies compassion in action. Drawing on her rich experience as a mother, wife, and professional, Mavis blends expertise with empathy, transforming lives through purpose-driven leadership. At the Golden Height Foundation, she champions education, women’s empowerment, and community transformation, guided by an unwavering belief that every child and woman deserves the chance to learn, rise, and thrive.",
-        socials: {
-          linkedin: "https://www.linkedin.com/in/dr-mrs-mavis-opoku-boadu",
-        },
-      },
-      {
-        id: "p2",
-        name: "Dr Prince Akowuah Aning",
-        title: "Strategy Advisor",
-        group: "Leadership",
-        image: PrinceImg,
-        bio: "Dr. Prince Aning is a strategist, academic, and managing consultant with extensive business experience in Africa and the UK. Holding a PhD from the UK focused on business innovation in challenging environments, he lectures at Ashesi University and the University of Utah, and advises growth-oriented SMEs across Africa. A passionate advocate for Africa’s economic transformation, he provides research-backed insights on strategy, entrepreneurship, and industrial policy. At Golden Height Foundation, Dr. Aning brings his expertise to strengthen strategic planning, sustainability, and impact-driven growth.",
-        socials: {
-          linkedin:
-            "https://www.linkedin.com/in/dr-prince-akowuah-aning-68a9694a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
-        },
-      },
-      {
-        id: "p3",
-        name: "Mrs Rosetta Marfowaa Asare",
-        title: "Donor & Partnerships Manager",
-        group: "Leadership",
-        image: RosettaImg,
-        bio: "Rosetta Asare is a Senior Financial Analyst with over five years of experience in financial planning, forecasting, and executive reporting across organizations such as Veolia Water Technologies & Solutions and Canada Pension Plan Investments. Holding an MBA in Financial Management, she specializes in transforming complex data into clear, actionable strategies. Beyond her corporate career, Rosetta serves as Donor and Partnerships Manager at Golden Height Foundation, advancing its mission to unlock potential through education, empowerment, and collaboration. To her, Golden Height is more than an organization it’s a movement rooted in dignity and lasting change.",
-        socials: {
-          linkedin: "https://www.linkedin.com/in/rosetta-aning/h",
-        },
-      },
-      {
-        id: "p5",
-        name: "Mr Matthew Amissah (CA)",
-        title: "Treasurer",
-        group: "Leadership",
-        image: MatthewImg,
-        bio: "Matthew oversees the financial management of the foundation, Having a strong background in finance and management, Matthew ensures sound financial planning, compliance, and strategic decision-making to support the company’s growth objectives. He holds an MBA (Finance) and is a member of the Institute of Chartered Accountants, Ghana (ICAG). Amissah is a charismatic leader, a dedicated team player, and a goal-oriented professional committed to excellence and organizational success.",
-        socials: {
-          linkedin:
-            "https://www.linkedin.com/in/amissah-matthew-a69256356?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-        },
-      },
-      {
-        id: "p6",
-        name: "Mr Gabriel Annan Dowuona (CpEH)",
-        title: "Programs Coordinator",
-        group: "Leadership",
-        image: GabrielImg,
-        bio: "Gabriel Annan Dowuona is a computer engineer with over 15years experience in IT Support, IT Project Management, Database Management, Computer networking, Systems Administration, and Cloud Computing. He is a certified Professional Ethical Hacker, Amazon Cloud Practitioner, A member of Internet Society, A member of the Information Technology and Disaster Resource Center, A certified Cybersecurity Practitioner with the Cybersecurity Authority Ghana.",
-        socials: {
-          linkedin: "https://linkedin.com/in/gadowuona",
-        },
-      },
-      {
-        id: "p7",
-        name: "Mr Isaac Yeboah Nsaful",
-        title: "Head of Administration & Training",
-        group: "Leadership",
-        bio: "An accomplished administrator with proven expertise in organizational management, staff development, and operational efficiency within the Foundation. Adept at designing and implementing training programmes that build capacity and drive institutional performance. Committed to fostering excellence, accountability, and sustainable growth across all administrative and training functions of the Foundation.",
-        image: IsaacImg,
-        socials: {
-          linkedin: "https://www.linkedin.com/in/iynsaful/",
-        },
-      },
-      {
-        id: "p8",
-        name: "Mr. Stephen Onyinah-Karikari",
-        title: "Member",
-        group: "Board of Trustees",
-        bio: "",
-        image: StephenImg,
-        socials: {
-          linkedin: "https://www.linkedin.com/in/stephen-o-1b900b18/",
-        },
-      },
-    ],
-    []
-  );
+  const [people, setPeople] = useState<Person[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        if (!process.env.NEXT_PUBLIC_BASE_API) {
+          throw new Error("NEXT_PUBLIC_API_URL is not set.");
+        }
+
+        const endpoint =
+          `${process.env.NEXT_PUBLIC_BASE_API}/team-page` +
+          `?populate[team][populate][image]=true&populate[team][populate][social]=true`;
+
+        const res = await fetch(endpoint, { cache: "no-store" });
+        if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+
+        const json = await res.json();
+
+        const apiTeam: ApiTeamMember[] = json?.data?.team ?? [];
+
+        const mapped: Person[] = apiTeam.map((m) => {
+          const name = (m.name || "").trim() || "Unnamed Member";
+          const title = (m.title || "").trim() || "Team Member";
+          const group = normalizeGroup(m.group);
+
+          const imageUrl = pickBestImageUrl(m.image);
+
+          const linkedin = m.social?.linkedInLink || undefined;
+          const twitter = m.social?.xLink || undefined;
+
+          const socials =
+            linkedin || twitter
+              ? {
+                  linkedin,
+                  twitter,
+                }
+              : undefined;
+
+          return {
+            id: String(m.id),
+            name,
+            title,
+            group,
+            bio: (m.bio || "").trim() || undefined,
+            imageUrl,
+            socials,
+          };
+        });
+
+        if (!cancelled) setPeople(mapped);
+      } catch (e: any) {
+        if (!cancelled) setError(e?.message || "Failed to load team members.");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const grouped = useMemo(() => {
+    const buckets = new Map<string, Person[]>();
+    for (const p of people) {
+      const key = normalizeGroup(p.group);
+      buckets.set(key, [...(buckets.get(key) || []), p]);
+    }
+    return buckets;
+  }, [people]);
 
   return (
     <Layout>
       <div className="min-h-screen bg-white text-black">
-        {/* Header */}
         <header className="py-10 px-6 md:px-14 bg-gradient-to-b from-neutral-50 to-white">
           <HeroText
             title="Our Team"
@@ -134,31 +171,48 @@ export default function Team() {
           />
         </header>
 
-        {/* Team Sections */}
         <main className="py-10 px-6 md:px-14">
-          <TeamSection
-            title="Founder"
-            people={people.filter((p) => p.group === "Founder")}
-            highlight
-          />
-          <TeamSection
-            title="Leadership"
-            people={people.filter((p) => p.group === "Leadership")}
-          />
-          <TeamSection
-            title="Team"
-            people={people.filter((p) => p.group === "Team")}
-          />
-          <TeamSection
-            title="Volunteers"
-            people={people.filter((p) => p.group === "Volunteers")}
-            subtle
-          />
-          <TeamSection
-            title="Board of Trustees"
-            people={people.filter((p) => p.group === "Board of Trustees")}
-            subtle
-          />
+          {loading && (
+            <div className="text-neutral-600">Loading team members…</div>
+          )}
+
+          {!loading && error && (
+            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
+              {error}
+              <div className="text-sm text-red-600 mt-1">
+                Showing no data because the API failed.
+              </div>
+            </div>
+          )}
+
+          {!loading && !error && people.length === 0 && (
+            <div className="text-neutral-600">No team members found yet.</div>
+          )}
+
+          {!loading && !error && (
+            <>
+              <TeamSection
+                title="Founder"
+                people={grouped.get("Founder") || []}
+                highlight
+              />
+              <TeamSection
+                title="Leadership"
+                people={grouped.get("Leadership") || []}
+              />
+              <TeamSection title="Team" people={grouped.get("Team") || []} />
+              <TeamSection
+                title="Volunteers"
+                people={grouped.get("Volunteers") || []}
+                subtle
+              />
+              <TeamSection
+                title="Board of Trustees"
+                people={grouped.get("Board of Trustees") || []}
+                subtle
+              />
+            </>
+          )}
         </main>
       </div>
     </Layout>
@@ -193,7 +247,7 @@ function TeamSection({
       </div>
 
       <motion.div
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-3 xl:grid-cols-4 gap-8"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
         variants={{
           hidden: {},
           show: { transition: { staggerChildren: 0.15 } },
@@ -223,10 +277,10 @@ function Card({ person, subtle }: { person: Person; subtle?: boolean }) {
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0e372d] to-emerald-500" />
 
       <div className="flex justify-center mt-8">
-        <div className="relative w-50 h-50 rounded-full overflow-hidden border-4 border-white shadow-md">
-          {person.image ? (
+        <div className="relative w-[128px] h-[128px] rounded-full overflow-hidden border-4 border-white shadow-md bg-neutral-100">
+          {person.imageUrl ? (
             <Image
-              src={person.image}
+              src={person.imageUrl}
               alt={person.name}
               fill
               className="object-cover"
@@ -242,15 +296,17 @@ function Card({ person, subtle }: { person: Person; subtle?: boolean }) {
         <h3 className="text-xl font-semibold text-[#0e372d] group-hover:text-emerald-700 transition">
           {person.name}
         </h3>
+
         <p
           className={`text-sm mt-1 ${
             subtle ? "text-neutral-500" : "text-neutral-600"
           }`}
         >
-          {person.title}
+          {person.title || "Team Member"}
         </p>
+
         <p className="text-xs text-neutral-400 uppercase tracking-wide">
-          {person.group}
+          {person.group || "Team"}
         </p>
 
         {person.bio && (
@@ -267,6 +323,7 @@ function Card({ person, subtle }: { person: Person; subtle?: boolean }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-neutral-500 hover:text-[#0e372d] transition-colors"
+                aria-label="LinkedIn"
               >
                 <Linkedin size={20} />
               </a>
@@ -277,6 +334,7 @@ function Card({ person, subtle }: { person: Person; subtle?: boolean }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-neutral-500 hover:text-[#0e372d] transition-colors"
+                aria-label="Twitter/X"
               >
                 <Twitter size={20} />
               </a>
@@ -287,6 +345,7 @@ function Card({ person, subtle }: { person: Person; subtle?: boolean }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-neutral-500 hover:text-[#0e372d] transition-colors"
+                aria-label="GitHub"
               >
                 <Github size={20} />
               </a>
@@ -301,13 +360,15 @@ function Card({ person, subtle }: { person: Person; subtle?: boolean }) {
 function Avatar({ name }: { name: string }) {
   const initials = name
     .split(" ")
+    .filter(Boolean)
     .map((n) => n[0])
     .slice(0, 2)
     .join("")
     .toUpperCase();
+
   return (
-    <div className="w-full h-80 bg-neutral-100 border-b border-neutral-200 grid place-items-center text-neutral-700 text-4xl font-semibold">
-      {initials}
+    <div className="w-full h-full grid place-items-center text-neutral-700 text-3xl font-semibold">
+      {initials || "?"}
     </div>
   );
 }
