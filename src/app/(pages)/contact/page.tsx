@@ -16,6 +16,13 @@ import X from "../../../../public/icons/X.svg";
 import Instagram from "../../../../public/icons/Instagram.svg";
 import Tiktok from "../../../../public/icons/tiktok.png";
 import ContactImg from "../../../../public/images/ContactImg.svg";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact Us | Golden Height Foundation",
+  description:
+    "You are more than welcome to leave your contact info and we will be in touch shortly",
+};
 
 type Faq = {
   id: number;
@@ -143,7 +150,7 @@ export default function Contact() {
   const [error, setError] = useState("");
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setFormData({
       ...formData,
@@ -166,7 +173,7 @@ export default function Contact() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ data: formData }),
-        }
+        },
       );
 
       const data = await res.json();
@@ -176,7 +183,7 @@ export default function Contact() {
       }
 
       setSuccess(
-        "Thank you for your submission and we will contact you shortly!"
+        "Thank you for your submission and we will contact you shortly!",
       );
       setFormData({
         firstName: "",
@@ -201,7 +208,7 @@ export default function Contact() {
     const fetchPageData = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_API}/contact-page?populate[faq]=true&populate[heading]=true&populate[paragraph]=true&populate[contact]=true`
+          `${process.env.NEXT_PUBLIC_BASE_API}/contact-page?populate[faq]=true&populate[heading]=true&populate[paragraph]=true&populate[contact]=true`,
         );
         if (!res.ok) throw new Error("Failed to fetch");
 

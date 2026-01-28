@@ -6,12 +6,19 @@ import { motion } from "framer-motion";
 import SingleProject from "@/app/components/Single-Project/SingleProject";
 import ProjectModal from "../../components/Modal/Modal";
 import HeroText from "@/app/components/Hero-text/Hero-text";
+import type { Metadata } from "next";
 
 import {
   fetchProjects,
   PROJECTS_FALLBACK,
   type Project,
 } from "@/app/lib/projects-content";
+
+export const metadata: Metadata = {
+  title: "Projects | Golden Height Foundation",
+  description:
+    "Discover the various initiatives and projects we are undertaking to create lasting impact in communities.",
+};
 
 export default function ProjectPage() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -21,7 +28,7 @@ export default function ProjectPage() {
   useEffect(() => {
     let mounted = true;
     (async () => {
-      const data = await fetchProjects(); 
+      const data = await fetchProjects();
       if (mounted) setProjectsData(data);
     })();
     return () => {

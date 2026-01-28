@@ -6,6 +6,13 @@ import HeroText from "@/app/components/Hero-text/Hero-text";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Linkedin, Twitter, Github } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Our Team | Golden Height Foundation",
+  description:
+    "Meet the dedicated individuals working passionately behind the scenes to drive our mission and create meaningful impact.",
+};
 
 type ApiTeamMember = {
   id: number;
@@ -64,7 +71,7 @@ function normalizeGroup(group?: string | null) {
 function getStrapiBase() {
   const strapi = (process.env.NEXT_PUBLIC_BASE_API_STRAPI || "").replace(
     /\/$/,
-    ""
+    "",
   );
 
   const apiBase = (process.env.NEXT_PUBLIC_BASE_API || "").replace(/\/$/, "");
@@ -112,7 +119,7 @@ export default function Team() {
 
         const apiBase = (process.env.NEXT_PUBLIC_BASE_API || "").replace(
           /\/$/,
-          ""
+          "",
         );
         if (!apiBase) {
           throw new Error("NEXT_PUBLIC_BASE_API is not set.");
