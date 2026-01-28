@@ -6,13 +6,13 @@ import Layout from "@/app/components/Layouts/AppLayout";
 import HeroText from "@/app/components/Hero-text/Hero-text";
 import type { GalleryItem } from "./gallery-data";
 import { fetchGalleryItems } from "@/app/lib/gallery-content";
-import type { Metadata } from "next";
+// import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Gallery | Golden Height Foundation",
-  description:
-    "Explore our gallery showcasing impactful moments, events, and stories that highlight our mission to empower communities and transform lives.",
-};
+// export const metadata: Metadata = {
+//   title: "Gallery | Golden Height Foundation",
+//   description:
+//     "Explore our gallery showcasing impactful moments, events, and stories that highlight our mission to empower communities and transform lives.",
+// };
 
 const ACCENT = "#c4a54a";
 const DEEP = "#0e372d";

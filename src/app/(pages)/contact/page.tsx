@@ -16,13 +16,13 @@ import X from "../../../../public/icons/X.svg";
 import Instagram from "../../../../public/icons/Instagram.svg";
 import Tiktok from "../../../../public/icons/tiktok.png";
 import ContactImg from "../../../../public/images/ContactImg.svg";
-import type { Metadata } from "next";
+// import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Contact Us | Golden Height Foundation",
-  description:
-    "You are more than welcome to leave your contact info and we will be in touch shortly",
-};
+// export const metadata: Metadata = {
+//   title: "Contact Us | Golden Height Foundation",
+//   description:
+//     "You are more than welcome to leave your contact info and we will be in touch shortly",
+// };
 
 type Faq = {
   id: number;

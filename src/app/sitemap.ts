@@ -1,5 +1,4 @@
 import { MetadataRoute } from "next";
-// import newsData from "@/app/(pages)/news/news-data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://goldenheightfoundation.org";
@@ -48,13 +47,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
   ];
-
-//   const newsPages: MetadataRoute.Sitemap = newsData.map((news) => ({
-//     url: `${baseUrl}/news/${news.slug}`,
-//     // lastModified: new Date(article.date),
-//     changeFrequency: "monthly",
-//     priority: 0.6,
-//   }));
 
   return [...staticPages];
 }

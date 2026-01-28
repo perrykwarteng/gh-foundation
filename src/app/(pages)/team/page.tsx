@@ -6,13 +6,13 @@ import HeroText from "@/app/components/Hero-text/Hero-text";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Linkedin, Twitter, Github } from "lucide-react";
-import type { Metadata } from "next";
+// import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Our Team | Golden Height Foundation",
-  description:
-    "Meet the dedicated individuals working passionately behind the scenes to drive our mission and create meaningful impact.",
-};
+// export const metadata: Metadata = {
+//   title: "Our Team | Golden Height Foundation",
+//   description:
+//     "Meet the dedicated individuals working passionately behind the scenes to drive our mission and create meaningful impact.",
+// };
 
 type ApiTeamMember = {
   id: number;

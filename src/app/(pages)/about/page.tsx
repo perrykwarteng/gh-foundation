@@ -14,13 +14,13 @@ import CoreValues from "@/app/components/abouts-comp/CoreValues";
 import SDGsSection from "@/app/components/abouts-comp/SdgSection";
 import { useAboutContent } from "@/app/hooks/useAboutContent";
 import { strapiUrl } from "@/app/lib/about-content";
-import type { Metadata } from "next";
+// import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "About Us | Golden Height Foundation",
-  description:
-    "Learn more about our mission, vision, and the values that drive us to transform lives through love and generosity.",
-};
+// export const metadata: Metadata = {
+//   title: "About Us | Golden Height Foundation",
+//   description:
+//     "Learn more about our mission, vision, and the values that drive us to transform lives through love and generosity.",
+// };
 
 export default function About() {
   const [showVideo, setShowVideo] = useState(false);
