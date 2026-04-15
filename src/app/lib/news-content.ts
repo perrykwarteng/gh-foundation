@@ -81,10 +81,8 @@ export type NewsItem = {
   description: string;
   image: string;
 
-  // ✅ keep plain string (for cards / fallback display)
   content: string;
 
-  // ✅ keep blocks (for detail page render headings/images/links)
   rawContent?: ContentBlock[];
 };
 
@@ -119,12 +117,13 @@ function joinApi(endpointPath: string) {
 
 export function strapiAssetUrl(path?: string) {
   if (!path) return "";
-  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  if (path.startsWith("http")) return path;
 
-  const origin = getOriginBase();
-  if (!origin) return path;
+  const base = (process.env.NEXT_PUBLIC_BASE_API || "")
+    .replace(/\/api$/, "")
+    .replace(/\/$/, "");
 
-  return path.startsWith("/") ? `${origin}${path}` : `${origin}/${path}`;
+  return path.startsWith("/") ? `${base}${path}` : `${base}/${path}`;
 }
 
 function safeJsonParse<T>(value: string | null): T | null {
@@ -182,7 +181,7 @@ function extractTextFromBlocks(blocks: unknown): string {
         .map((p) =>
           (p?.children ?? [])
             .map((c) => (c?.text ? String(c.text) : ""))
-            .join("")
+            .join(""),
         )
         .join("\n")
         .trim();
@@ -236,7 +235,6 @@ export function mapNewsApiToNewsItems(json: NewsApiResponse): NewsItem[] {
       const description = (n.description || "").trim() || "Latest update.";
       const image = pickBestImageUrl(n.coverImage) || "/images/B1.svg";
 
-      // ✅ this matches your response (content is an array of blocks)
       const rawContent = Array.isArray(n.content)
         ? (n.content as ContentBlock[])
         : [];
@@ -252,7 +250,6 @@ export async function fetchNews(): Promise<NewsItem[]> {
   const timeout = setTimeout(() => controller.abort(), 9000);
 
   try {
-    // ✅ includes blocks + image inside paragraph-with-image
     const endpoint =
       "/news-pages?populate[coverImage][populate]=*&populate[content][on][blocks.heading][populate]=*&populate[content][on][blocks.paragraph][populate]=*&populate[content][on][blocks.paragraph-with-image][populate][image]=true&populate[content][on][elements.link][populate]=*";
 

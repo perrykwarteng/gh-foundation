@@ -47,8 +47,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       try {
         const response = await getGlobal();
 
-        // response shape (from you):
-        // { data: { bankInformation, momo, internationalTransfers, advertisement, ... }, meta: {} }
+        
         const data = response?.data;
 
         const normalized: GlobalData = {
